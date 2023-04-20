@@ -1,0 +1,26 @@
+#Spring properties
+# Available profiles: jsp, twig (mutually exclusive)
+spring.profiles.active=jsp
+# To-do: Do we need this with current configurations?
+spring.main.allow-bean-definition-overriding=true
+# Additional debug information. Requests/responses.
+logging.level.web=DEBUG
+
+spring.mvc.throw-exception-if-no-handler-found=true
+
+#DB Properties
+db.username = postgres
+db.password =
+db.driver = org.postgresql.Driver
+db.url =
+
+#Hibernate Configuration:
+hibernate.dialect=org.hibernate.dialect.PostgresPlusDialect
+hibernate.show_sql=true
+entitymanager.packages.to.scan = ru.kpfu.itis.belskaya.models
+hibernate.hbm2ddl.auto = update
+hibernate.enable_lazy_load_no_trans= true
+# Hibernate tries to use @Generated value of type table what is wrong
+# https://vladmihalcea.com/why-should-not-use-the-auto-jpa-generationtype-with-mysql-and-hibernate/
+# https://hibernate.atlassian.net/browse/HHH-11014
+hibernate.id.new_generator_mappings=true
