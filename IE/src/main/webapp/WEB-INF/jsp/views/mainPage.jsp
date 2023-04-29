@@ -2,16 +2,31 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <t:baseHead title="IndependentEducation" scriptLink="/js/mainScript.js"/>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
 
 <body>
 <header>
-    <%@include file="/WEB-INF/includes/anonNavbar.jsp" %>
+
+    <security:authorize access="hasAuthority('TUTOR')">
+        <%@ include file="/WEB-INF/includes/tutorNavbar.jsp" %>
+    </security:authorize>
+    <security:authorize access="hasAuthority('STUDENT')">
+        <%@ include file="/WEB-INF/includes/studentNavbar.jsp" %>
+    </security:authorize>
+    <security:authorize access="isAnonymous()">
+        <%@ include file="/WEB-INF/includes/anonNavbar.jsp" %>
+    </security:authorize>
+
 </header>
 
 <div id="gray"></div>
-<div id="nav-sign-in">
-    <img id = "login-img-button" src = "<c:url value="/images/login.png"/>"/>
-</div>
+
+<security:authorize access="isAnonymous()">
+    <div id="nav-sign-in">
+        <img id = "login-img-button" src = "<c:url value="/images/login.png"/>"/>
+    </div>
+</security:authorize>
+
 <%@include file="/WEB-INF/includes/authorizationWindow.jsp" %>
 <div class="container">
 <div class = "row g-0 .mx-0">

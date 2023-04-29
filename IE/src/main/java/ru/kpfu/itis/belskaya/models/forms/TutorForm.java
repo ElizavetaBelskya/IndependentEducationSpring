@@ -42,8 +42,8 @@ public class TutorForm {
     City city;
     @NotNull
     private boolean gender;
-    private boolean isWorkingOnline;
-    private List<Subject> subjectList;
+    private Boolean isWorkingOnline;
+    private List<Subject> subjects;
 
 
 

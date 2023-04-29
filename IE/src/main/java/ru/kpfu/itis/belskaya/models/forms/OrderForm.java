@@ -20,10 +20,13 @@ public class OrderForm {
 
     @NotBlank(message = "It can't be empty")
     private String subject;
+
     private String description;
 
     private String gender;
+
     private Boolean rating;
+
     private String online;
 
     @NotNull

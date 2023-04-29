@@ -3,11 +3,14 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.belskaya.models.Account;
+import ru.kpfu.itis.belskaya.models.forms.LoginForm;
 import ru.kpfu.itis.belskaya.repositories.CityRepository;
+
+import javax.annotation.security.PermitAll;
+import javax.validation.Valid;
 
 /**
  * @author Elizaveta Belskaya
@@ -16,17 +19,16 @@ import ru.kpfu.itis.belskaya.repositories.CityRepository;
 @RequestMapping("/")
 public class MainController {
 
-    @Autowired
-    private CityRepository cityRepository;
-
-    @GetMapping
-    public String mainPage() {
-        return "/views/mainPage";
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(ModelMap map) {
-        map.put("user", new Account());
+    @RequestMapping(value = "/main")
+    public String login(@RequestParam(required = false) String status,
+                        @Valid @ModelAttribute("loginForm") LoginForm loginForm,
+                        BindingResult result,
+                        ModelMap map) {
+        if (status != null && status.equals("failed")) {
+            map.put("error", "User not found");
+        } else {
+            map.put("error", null);
+        }
         return "/views/mainPage";
     }
 

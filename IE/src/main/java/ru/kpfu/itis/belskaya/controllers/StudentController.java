@@ -34,7 +34,7 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
 
-    private String STUDENT = "_____Student";
+    private final String STUDENT = "_____Student";
 
     @Autowired
     private OrderRepository orderRepository;
@@ -101,10 +101,15 @@ public class StudentController {
                     .phone(studentForm.getPhone())
                     .account(user).build();
             try {
-                userService.registerUser(user, student);
-                redirectAttributes.addFlashAttribute("message", "Successfully registered!");
+                boolean registered = userService.registerUser(user, student);
+                if (registered) {
+                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#addOrderGet").build();
+                } else  {
+                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
+                }
             } catch (Exception ex) {
                 redirectAttributes.addFlashAttribute("message", ex.getMessage());
+                return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
             }
         }
 
@@ -112,6 +117,7 @@ public class StudentController {
         map.put("cities", cityList);
         return "/views/studentRegistrationPage";
     }
+
 
 
 }

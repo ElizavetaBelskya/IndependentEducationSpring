@@ -3,15 +3,21 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kpfu.itis.belskaya.models.Order;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.kpfu.itis.belskaya.models.*;
+import ru.kpfu.itis.belskaya.models.forms.StudentForm;
 import ru.kpfu.itis.belskaya.models.forms.TutorForm;
 import ru.kpfu.itis.belskaya.repositories.CityRepository;
 import ru.kpfu.itis.belskaya.repositories.OrderRepository;
 import ru.kpfu.itis.belskaya.repositories.SubjectRepository;
+import ru.kpfu.itis.belskaya.services.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -21,7 +27,12 @@ import java.util.List;
 @RequestMapping("/tutor")
 public class TutorController {
 
-    private int PAGE_SIZE = 3;
+    private final int PAGE_SIZE = 3;
+
+    private final String TUTOR = "_____Tutor";
+
+    @Autowired
+    private UserService<Tutor> userService;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -56,6 +67,42 @@ public class TutorController {
     public String register(ModelMap map) {
         map.put("userForm", new TutorForm());
         map.put("cities", cityRepository.findAll());
+        map.put("subjects", subjectRepository.findAll());
+        return "/views/tutorRegistrationPage";
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String registerPost(RedirectAttributes redirectAttributes,
+                               @ModelAttribute("userForm") @Valid TutorForm tutorForm,
+                               BindingResult result,
+                               ModelMap map) {
+        if (!result.hasErrors()) {
+            Account user = Account.builder()
+                    .emailAndRole(tutorForm.getEmail() + TUTOR)
+                    .name(tutorForm.getName())
+                    .passwordHash(tutorForm.getPassword())
+                    .role(Account.Role.TUTOR)
+                    .state(Account.State.ACTIVE)
+                    .city(tutorForm.getCity())
+                    .build();
+
+            Tutor tutor = Tutor.builder()
+                    .email(tutorForm.getEmail())
+                    .phone(tutorForm.getPhone())
+                    .gender(tutorForm.isGender())
+                    .subjectList(tutorForm.getSubjects())
+                    .isWorkingOnline(tutorForm.getIsWorkingOnline())
+                    .account(user).build();
+            try {
+                userService.registerUser(user, tutor);
+                redirectAttributes.addFlashAttribute("message", "Successfully registered!");
+            } catch (Exception ex) {
+                redirectAttributes.addFlashAttribute("message", ex.getMessage());
+            }
+        }
+
+        List<City> cityList = cityRepository.findAll();
+        map.put("cities", cityList);
         map.put("subjects", subjectRepository.findAll());
         return "/views/tutorRegistrationPage";
     }

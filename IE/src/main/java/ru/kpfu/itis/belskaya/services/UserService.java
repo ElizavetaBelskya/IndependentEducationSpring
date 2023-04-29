@@ -47,7 +47,7 @@ public class UserService<T extends User> implements UserDetailsService {
         }
     }
 
-    public void registerUser(Account account, T user) throws DuplicateKeyException {
+    public boolean registerUser(Account account, T user) throws DuplicateKeyException {
         // Я мучилась с абстракциями долго, все, хватит, просто switch case! тем более ролей, даже потенциально, немного
         switch (account.getRole()) {
             case TUTOR: {
@@ -58,7 +58,10 @@ public class UserService<T extends User> implements UserDetailsService {
                     Account addedAccount = accountRepository.save(account);
                     user.setAccount(addedAccount);
                     Tutor tutor = (Tutor) user;
-                    Tutor createdAccount = tutorRepository.save(tutor);
+                    Tutor createdUser = tutorRepository.save(tutor);
+                    if (createdUser != null) {
+                        return true;
+                    }
                 }
                 break;
             }
@@ -70,11 +73,16 @@ public class UserService<T extends User> implements UserDetailsService {
                     Account addedAccount = accountRepository.save(account);
                     user.setAccount(addedAccount);
                     Student student = (Student) user;
-                    Student createdAccount = studentRepository.save(student);
+                    Student createdUser = studentRepository.save(student);
+                    if (createdUser != null) {
+                        return true;
+                    }
                 }
                 break;
             }
         }
+
+        return false;
 
     }
 

@@ -96,7 +96,7 @@ public class Account implements CredentialsContainer, UserDetails {
         STUDENT("Student"),
         TUTOR("Tutor");
 
-        private String className;
+        private final String className;
 
         Role(String className) {
             this.className = className;

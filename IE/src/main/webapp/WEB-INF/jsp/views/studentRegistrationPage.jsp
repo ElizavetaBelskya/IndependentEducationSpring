@@ -59,7 +59,9 @@
 
 
                                 <input type='submit' class="gradient-btn" value='Sign in'>
-
+                                <c:if test="${message != null}">
+                                   ${message}
+                                </c:if>
                             </div>
                         </div>
                     </div>
@@ -67,10 +69,6 @@
             </div>
 </form:form>
 
-
-    <c:if test="${message != null}">
-        <t:modal answer="${message}" answerTitle = "${message}"/>
-    </c:if>
 
 </body>
 </html>
