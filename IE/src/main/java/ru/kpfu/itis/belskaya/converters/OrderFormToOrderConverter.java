@@ -1,9 +1,11 @@
 package ru.kpfu.itis.belskaya.converters;
 
+import lombok.AllArgsConstructor;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.belskaya.models.Order;
+import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 
 import java.util.HashSet;
@@ -12,8 +14,11 @@ import java.util.Set;
 /**
  * @author Elizaveta Belskaya
  */
-@Component
+
+@AllArgsConstructor
 public class OrderFormToOrderConverter implements GenericConverter {
+
+    private Student author;
     @Override
     public Set<ConvertiblePair> getConvertibleTypes() {
         HashSet<ConvertiblePair> pairSet = new HashSet<>();
@@ -32,6 +37,7 @@ public class OrderFormToOrderConverter implements GenericConverter {
                     .price(src.getPrice())
                     .online(Enum.valueOf(Order.Format.class, src.getOnline().toUpperCase()))
                     .tutorGender(Enum.valueOf(Order.Gender.class, src.getGender().toUpperCase()))
+                    .author(author)
                     .build();
             return order;
         }

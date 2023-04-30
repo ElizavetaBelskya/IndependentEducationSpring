@@ -16,4 +16,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Optional<Student> findAccountByEmailOrPhone(String email, String phone);
 
+    Student findByAccount_Id(Long accountId);
+
 }

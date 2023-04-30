@@ -34,7 +34,13 @@ public class Order {
     @Column(name = "min_rating")
     private float minRating = 0;
     @Column(name = "created_at")
-    private LocalDateTime creationDate = LocalDateTime.now();
+    private LocalDateTime creationDate;
+
+    @PrePersist
+    private void updateCreationDate() {
+        creationDate = LocalDateTime.now();
+    }
+
     @ManyToOne
     @JoinColumn(name = "tutor_id", referencedColumnName = "id")
     private Tutor tutor;

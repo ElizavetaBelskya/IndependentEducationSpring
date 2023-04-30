@@ -3,6 +3,8 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -20,11 +22,14 @@ import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.models.forms.StudentForm;
 import ru.kpfu.itis.belskaya.repositories.CityRepository;
 import ru.kpfu.itis.belskaya.repositories.OrderRepository;
+import ru.kpfu.itis.belskaya.repositories.StudentRepository;
 import ru.kpfu.itis.belskaya.repositories.SubjectRepository;
 import ru.kpfu.itis.belskaya.services.UserService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Elizaveta Belskaya
@@ -40,12 +45,38 @@ public class StudentController {
     private OrderRepository orderRepository;
     @Autowired
     private SubjectRepository subjectRepository;
-    @Autowired
-    private OrderFormToOrderConverter orderFormToOrderConverter;
+
     @Autowired
     private CityRepository cityRepository;
     @Autowired
     private UserService<Student> userService;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String getProfile(ModelMap map) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        Student student = studentRepository.findByAccount_Id(account.getId());
+        map.put("account", account);
+        map.put("student", student);
+        return "/views/studentProfilePage";
+    }
+
+    @RequestMapping(value = "/my_orders", method = RequestMethod.GET)
+    public String getStudentOrders(ModelMap map) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        Student student = studentRepository.findByAccount_Id(account.getId());
+        Optional<List<Order>> orders = orderRepository.getOrdersByAuthor(student);
+        if (orders.isPresent()) {
+            map.put("orders", orders.get());
+        } else {
+            map.put("orders", null);
+        }
+        return "/views/studentOrdersPage";
+    }
 
     @RequestMapping(value = "/new_order", method = RequestMethod.GET)
     public String addOrderGet(ModelMap map) {
@@ -66,7 +97,11 @@ public class StudentController {
             return "/views/orderCreationPage";
         } else {
             if (orderForm != null) {
-                Order order = (Order) orderFormToOrderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                Account account = (Account) authentication.getPrincipal();
+                Student student = studentRepository.findByAccount_Id(account.getId());
+                OrderFormToOrderConverter orderConverter = new OrderFormToOrderConverter(student);
+                Order order = (Order) orderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
                 orderRepository.save(order);
                 redirectAttributes.addFlashAttribute("answer", "Successfully created");
             }
@@ -117,6 +152,8 @@ public class StudentController {
         map.put("cities", cityList);
         return "/views/studentRegistrationPage";
     }
+
+
 
 
 

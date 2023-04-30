@@ -5,7 +5,7 @@
 <%@ attribute name="action"%>
 <div class = "empty-list">
   <h2 class="empty-list-text">${text}</h2>
-  <form action="<c:url value="${link}"/>" method="GET">
+  <form action="${link}" method="GET">
     <input type="submit" value="${action}" class="btn btn-outline-info"/>
   </form>
 </div>

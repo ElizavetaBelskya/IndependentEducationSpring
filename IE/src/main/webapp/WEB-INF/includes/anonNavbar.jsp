@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
 
-        <a class="navbar-brand" href="<c:url value="/main"/>">
+        <a class="navbar-brand" href="${spring:mvcUrl('MC#login').build()}">
             <img src="<c:url value="/images/free-icon-studying-1903172.png"/>" alt="IE" width="40" height="40">
         </a>
 

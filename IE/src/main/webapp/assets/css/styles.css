@@ -419,3 +419,102 @@ body {
 .btn-login:hover {
     background-color: #0062cc;
 }
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.edit-order-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 500px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    color: white;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: none;
+    font-family: Arial, sans-serif;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+}
+
+.btn-edit-this {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
