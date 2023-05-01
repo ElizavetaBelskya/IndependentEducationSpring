@@ -7,18 +7,14 @@ async function updateOrders() {
         method: 'GET'
     }).then(response => response.json());
 
-    console.log(subjects)
-
     if (result.status === 404) {
-        let carousel = document.querySelector(".carousel");
-        carousel.remove();
-        let container = document.querySelector('.no-container');
-        container.innerHTML = '<div class = "empty-list"> ' +
-            '<h2 class="empty-list-text">You have not created any orders</h2>' +
-        '<form action="'+ contextName  + "/new_order" + '" method="GET">' +
-            '<input type="submit" value="Create" class="btn btn-outline-info"/>' +
-    '</form></div>'
-
+        const carousel = document.querySelector(".carousel");
+        carousel.innerHTML = '';
+        const editform = document.querySelector('.edit-order-form');
+        editform.innerHTML = ''
+        editform.style.display = 'none';
+        const container = document.querySelector('.no-container');
+        container.style.display = 'flex';
     }
 
     if (result.ok) {
@@ -26,7 +22,6 @@ async function updateOrders() {
 
         const container = document.querySelector(".carousel-inner");
         container.innerHTML = '';
-
 
         for (let i = 0; i < orders.length; i += 3) {
             const item = document.createElement("div");
@@ -39,7 +34,6 @@ async function updateOrders() {
 
             for (let j = i; j < i + 3 && j < orders.length; j++) {
                 order = orders[j];
-                console.log("ОРДЕР" + order.id)
                 const col = document.createElement("div");
                 col.classList.add("col");
                 let card = document.createElement("div");
@@ -95,83 +89,45 @@ async function updateOrders() {
 
 
 function createOrderForm(order, subjects) {
-    let editorContainer = `
-    <div class="edit-order-form">
-  <div class="form-group">
-    <label for="subject-select" class="form-label">Subject:</label>
-    <select id="subject-select" name="subject" class="form-control">
-    </select>
-  </div>
-  
-  <div class="form-group">
-    <label class="form-label">Online:</label>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="online" name="online" value="ONLINE" ${order.online === 'ONLINE' ? 'checked' : ''}>
-      <label class="form-check-label" for="online">Online</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="offline" name="online" value="OFFLINE" ${order.online === 'OFFLINE' ? 'checked' : ''}>
-      <label class="form-check-label" for="offline">Offline</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="both" name="online" value="BOTH" ${order.online === 'BOTH' ? 'checked' : ''}>
-      <label class="form-check-label" for="both">Both</label>
-    </div>
-  </div>
 
-  <div class="form-group">
-    <label class="form-label">Tutor Gender:</label>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="male" name="gender" value="MALE" ${order.tutorGender === 'MALE' ? 'checked' : ''}>
-      <label class="form-check-label" for="male">Male</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="female" name="gender" value="FEMALE" ${order.tutorGender === 'FEMALE' ? 'checked' : ''}>
-      <label class="form-check-label" for="female">Female</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="both" name="gender" value="BOTH" ${order.tutorGender === 'BOTH' ? 'checked' : ''}>
-      <label class="form-check-label" for="both">Both</label>
-    </div>
-  </div>
+    const onlineRadios = document.querySelectorAll('input[name="online"]');
+    for (let radio of onlineRadios) {
+        if (radio.value === order.online) {
+            radio.checked = true;
+            break;
+        }
+    }
 
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="rating" name="rating" ${parseFloat(order.minRating) >= 4.0 ? 'checked' : ''}>
-      <label class="form-check-label" for="rating">Only with a rating greater than 4.0</label>
-    </div>
-  </div>
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    for (let radio of genderRadios) {
+        if (radio.value === order.tutorGender) {
+            radio.checked = true;
+            break;
+        }
+    }
 
-  <div class="form-group">
-    <label for="description" class="form-label">Description:</label>
-    <textarea id="description" name="description" maxLength="120" class="form-control">${order.description}</textarea>
-  </div>
-
-  <div class="form-group">
-    <label for="price" class="form-label">Price:</label>
-    <input type="number" id="price" value="${order.price}" name="price" min="100" max="10000"/>
-  </div>  
-
- <input type="submit" class="btn btn-primary btn-edit-this" value="Edit">  
-  </div>
-
-`;
-
-    let container = document.querySelector('.no-container');
-    container.innerHTML = '';
-    container.innerHTML = editorContainer;
+    const rating = document.getElementById('rating');
+    rating.checked = order.minRating >= 4.0;
+    const description = document.getElementById('description');
+    description.innerText = order.description
+    const price = document.getElementById('price');
+    price.value = order.price
 
     const subjectSelect = document.getElementById("subject-select");
+    subjectSelect.innerHTML = '';
     subjects.forEach((subject, index) => {
         const option = document.createElement("option");
         option.text = subject.title;
         option.value = subject.title;
         subjectSelect.add(option);
 
-        if (subject === order.subject) {
+        if (subject.title === order.subject) {
             subjectSelect.selectedIndex = index;
         }
     });
+
+    let container = document.querySelector('.edit-order-form');
+    container.style.display = 'flex';
 
     const editButton = document.querySelector('.btn-edit-this');
     editButton.addEventListener('click', async (event) => {
@@ -202,8 +158,9 @@ function createOrderForm(order, subjects) {
 
 
         if (result.ok) {
+            container.style.display = 'none';
             updateOrders();
-            container.innerHTML = '';
+
         }
 
     });

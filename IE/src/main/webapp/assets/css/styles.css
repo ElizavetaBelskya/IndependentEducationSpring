@@ -449,7 +449,7 @@ body {
 }
 
 .edit-order-form {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     padding: 20px;
@@ -517,4 +517,8 @@ input[type="number"] {
 .btn-edit-this {
     background-color: #5cb85c;
     border-color: #4cae4c;
+}
+
+.no-container {
+    display: none;
 }
