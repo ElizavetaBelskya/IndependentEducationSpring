@@ -22,5 +22,8 @@ public class City {
 
     private String title;
 
+    @Column(name = "country_code")
+    private String countryCode;
+
 
 }

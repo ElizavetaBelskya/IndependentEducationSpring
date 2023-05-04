@@ -10,6 +10,9 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.kpfu.itis.belskaya.models.Student;
+import ru.kpfu.itis.belskaya.models.Tutor;
+import ru.kpfu.itis.belskaya.services.UserService;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -25,6 +28,18 @@ import java.util.Properties;
 public class RootConfig {
     @Resource
     private Environment env;
+
+    @Bean
+    public UserService<Student> userServiceStudent() {
+        return new UserService<Student>();
+    }
+
+    @Bean
+    public UserService<Tutor> userServiceTutor() {
+        return new UserService<Tutor>();
+    }
+
+
 
     @Bean
     public DataSource dataSource() {
@@ -59,6 +74,8 @@ public class RootConfig {
         properties.put("hibernate.enable_lazy_load_no_trans", env.getRequiredProperty("hibernate.enable_lazy_load_no_trans"));
         return properties;
     }
+
+
 
 
 }

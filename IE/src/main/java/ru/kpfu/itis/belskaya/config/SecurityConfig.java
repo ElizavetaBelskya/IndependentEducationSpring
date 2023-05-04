@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.kpfu.itis.belskaya.models.User;
+import ru.kpfu.itis.belskaya.services.AccountService;
 import ru.kpfu.itis.belskaya.services.UserService;
 
 /**
@@ -23,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService()).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(accountService()).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -57,8 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserService userService(){
-        return new UserService();
+    public AccountService accountService(){
+        return new AccountService();
     }
 
 }

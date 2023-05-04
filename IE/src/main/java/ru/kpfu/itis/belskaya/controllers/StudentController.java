@@ -20,14 +20,10 @@ import ru.kpfu.itis.belskaya.models.Order;
 import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.models.forms.StudentForm;
-import ru.kpfu.itis.belskaya.repositories.CityRepository;
-import ru.kpfu.itis.belskaya.repositories.OrderRepository;
-import ru.kpfu.itis.belskaya.repositories.StudentRepository;
-import ru.kpfu.itis.belskaya.repositories.SubjectRepository;
-import ru.kpfu.itis.belskaya.services.UserService;
+import ru.kpfu.itis.belskaya.services.*;
+import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,30 +31,39 @@ import java.util.Optional;
  * @author Elizaveta Belskaya
  */
 @Controller
-@ComponentScan({"ru.kpfu.itis.belskaya.converters", "ru.kpfu.itis.belskaya.repositories"})
+@ComponentScan({"ru.kpfu.itis.belskaya.converters",
+        "ru.kpfu.itis.belskaya.repositories",
+        "ru.kpfu.itis.belskaya.validators",
+        "ru.kpfu.itis.belskaya.services"})
 @RequestMapping("/student")
 public class StudentController {
+
+
+    @Autowired
+    private EmailAndPhoneValidator emailAndPhoneValidator;
 
     private final String STUDENT = "_____Student";
 
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private SubjectRepository subjectRepository;
+    private OrderService orderService;
 
     @Autowired
-    private CityRepository cityRepository;
-    @Autowired
-    private UserService<Student> userService;
+    private SubjectService subjectService;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private CityService cityService;
+
+    @Autowired
+    private UserService<Student> userServiceStudent;
+
+    @Autowired
+    private AccountService accountService;
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account account = (Account) authentication.getPrincipal();
-        Student student = studentRepository.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccount_Id(account.getId());
         map.put("account", account);
         map.put("student", student);
         return "/views/studentProfilePage";
@@ -68,8 +73,8 @@ public class StudentController {
     public String getStudentOrders(ModelMap map) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account account = (Account) authentication.getPrincipal();
-        Student student = studentRepository.findByAccount_Id(account.getId());
-        Optional<List<Order>> orders = orderRepository.getOrdersByAuthor(student);
+        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Optional<List<Order>> orders = orderService.getOrdersByAuthor(student);
         if (orders.isPresent()) {
             map.put("orders", orders.get());
         } else {
@@ -80,7 +85,7 @@ public class StudentController {
 
     @RequestMapping(value = "/new_order", method = RequestMethod.GET)
     public String addOrderGet(ModelMap map) {
-        map.put("subjects", subjectRepository.findAllTitles());
+        map.put("subjects", subjectService.findAllTitles());
         map.put("order", new OrderForm());
         return "/views/orderCreationPage";
     }
@@ -92,17 +97,17 @@ public class StudentController {
             BindingResult result,
             ModelMap map
     ) {
-        map.put("subjects", subjectRepository.findAllTitles());
+        map.put("subjects", subjectService.findAllTitles());
         if (result.hasErrors()) {
             return "/views/orderCreationPage";
         } else {
             if (orderForm != null) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 Account account = (Account) authentication.getPrincipal();
-                Student student = studentRepository.findByAccount_Id(account.getId());
+                Student student = userServiceStudent.findByAccount_Id(account.getId());
                 OrderFormToOrderConverter orderConverter = new OrderFormToOrderConverter(student);
                 Order order = (Order) orderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
-                orderRepository.save(order);
+                orderService.createOrder(order);
                 redirectAttributes.addFlashAttribute("answer", "Successfully created");
             }
             return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#addOrderGet").build();
@@ -111,7 +116,7 @@ public class StudentController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String register(ModelMap map) {
-        map.put("cities", cityRepository.findAll());
+        map.put("cities", cityService.findAll());
         map.put("userForm", new StudentForm());
         return "/views/studentRegistrationPage";
     }
@@ -122,6 +127,14 @@ public class StudentController {
                                BindingResult result,
                                ModelMap map) {
         if (!result.hasErrors()) {
+            if (!emailAndPhoneValidator.validateEmail(studentForm.getEmail())) {
+                redirectAttributes.addFlashAttribute("message", "Your email is not real");
+                return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
+            } else if (!emailAndPhoneValidator.validatePhone(studentForm.getPhone(), studentForm.getCity().getCountryCode())) {
+                redirectAttributes.addFlashAttribute("message", "Your phone is not real or you selected wrong country");
+                return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
+            }
+
             Account user = Account.builder()
                     .emailAndRole(studentForm.getEmail() + STUDENT)
                     .name(studentForm.getName())
@@ -136,7 +149,7 @@ public class StudentController {
                     .phone(studentForm.getPhone())
                     .account(user).build();
             try {
-                boolean registered = userService.registerUser(user, student);
+                boolean registered = accountService.registerUser(user, student);
                 if (registered) {
                     return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#addOrderGet").build();
                 } else  {
@@ -148,7 +161,7 @@ public class StudentController {
             }
         }
 
-        List<City> cityList = cityRepository.findAll();
+        List<City> cityList = cityService.findAll();
         map.put("cities", cityList);
         return "/views/studentRegistrationPage";
     }

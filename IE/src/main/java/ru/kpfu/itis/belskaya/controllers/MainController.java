@@ -5,12 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.belskaya.models.Account;
 import ru.kpfu.itis.belskaya.models.forms.LoginForm;
-import ru.kpfu.itis.belskaya.repositories.CityRepository;
+import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
 
-import javax.annotation.security.PermitAll;
+
 import javax.validation.Valid;
+
 
 /**
  * @author Elizaveta Belskaya
@@ -31,7 +31,5 @@ public class MainController {
         }
         return "/views/mainPage";
     }
-
-
 
 }

@@ -24,3 +24,4 @@ hibernate.enable_lazy_load_no_trans= true
 # https://vladmihalcea.com/why-should-not-use-the-auto-jpa-generationtype-with-mysql-and-hibernate/
 # https://hibernate.atlassian.net/browse/HHH-11014
 hibernate.id.new_generator_mappings=true
+

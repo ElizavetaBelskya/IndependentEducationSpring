@@ -1,12 +1,10 @@
 package ru.kpfu.itis.belskaya.models;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.kpfu.itis.belskaya.services.UserService;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -28,6 +26,7 @@ public class Account implements CredentialsContainer, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
     @Column(name = "email_and_role", nullable = false, unique = true)
@@ -35,6 +34,7 @@ public class Account implements CredentialsContainer, UserDetails {
 
     @Column(name = "password_hash")
     private String passwordHash;
+
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     private City city;

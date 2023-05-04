@@ -1,13 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<t:baseHead title="Sign up" scriptLink="/js/registration.js"/>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<t:baseHead title="Sign up" scriptLink="/js/registration.js"/>
 <body>
 <header>
     <%@include file="/WEB-INF/includes/anonNavbar.jsp" %>
-    <script charset="UTF-8" src="<c:url value="/js/registration.js"/>"></script>
 </header>
 <form:form modelAttribute="userForm" method='POST'>
             <div class="container h-100" id="reg-container">
