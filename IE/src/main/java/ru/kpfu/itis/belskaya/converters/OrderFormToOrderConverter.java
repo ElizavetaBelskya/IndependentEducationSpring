@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.stereotype.Component;
+import ru.kpfu.itis.belskaya.models.Gender;
 import ru.kpfu.itis.belskaya.models.Order;
 import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
@@ -36,7 +37,7 @@ public class OrderFormToOrderConverter implements GenericConverter {
                     .minRating(src.getRating()? 4.0f:0.0f)
                     .price(src.getPrice())
                     .online(Enum.valueOf(Order.Format.class, src.getOnline().toUpperCase()))
-                    .tutorGender(Enum.valueOf(Order.Gender.class, src.getGender().toUpperCase()))
+                    .tutorGender(Enum.valueOf(Gender.class, src.getGender().toUpperCase()))
                     .author(author)
                     .build();
             return order;

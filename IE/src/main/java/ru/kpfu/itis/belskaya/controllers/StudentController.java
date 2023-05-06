@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
+import ru.kpfu.itis.belskaya.converters.StudentFormToAccountAndStudentConverter;
 import ru.kpfu.itis.belskaya.models.Account;
 import ru.kpfu.itis.belskaya.models.City;
 import ru.kpfu.itis.belskaya.models.Order;
@@ -134,22 +135,11 @@ public class StudentController {
                 redirectAttributes.addFlashAttribute("message", "Your phone is not real or you selected wrong country");
                 return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
             }
-
-            Account user = Account.builder()
-                    .emailAndRole(studentForm.getEmail() + STUDENT)
-                    .name(studentForm.getName())
-                    .passwordHash(studentForm.getPassword())
-                    .role(Account.Role.STUDENT)
-                    .state(Account.State.ACTIVE)
-                    .city(studentForm.getCity())
-                    .build();
-
-            Student student = Student.builder()
-                    .email(studentForm.getEmail())
-                    .phone(studentForm.getPhone())
-                    .account(user).build();
+            StudentFormToAccountAndStudentConverter converter = new StudentFormToAccountAndStudentConverter();
+            Account account = (Account) converter.convert(studentForm, TypeDescriptor.valueOf(StudentForm.class), TypeDescriptor.valueOf(Account.class));
+            Student student = (Student) converter.convert(studentForm, TypeDescriptor.valueOf(StudentForm.class), TypeDescriptor.valueOf(Student.class));
             try {
-                boolean registered = accountService.registerUser(user, student);
+                boolean registered = accountService.registerUser(account, student);
                 if (registered) {
                     return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#addOrderGet").build();
                 } else  {

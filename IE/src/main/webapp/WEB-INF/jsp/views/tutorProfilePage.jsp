@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
-<%@ taglib prefix="mt" uri="myTags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <t:baseHead title="My profile"/>
 <body>
@@ -16,28 +15,28 @@
 
           <div>
             <p>
-              Name: ${name}
+              Name: ${account.name}
             </p>
             <p>
-              Email: ${email}
+              Email: ${tutor.email}
             </p>
             <p>
-              Phone: ${phone}
+              Phone: ${tutor.phone}
             </p>
             <p>
-              City: ${city}
+              City: ${account.city.title}
             </p>
             <p>
-              Rating: ${rating}
+              Rating: ${tutor.rating}
             </p>
             <p>
-              Gender: ${gender}
+              Gender: ${tutor.gender}
             </p>
             <p>
               Subjects:
               <ul>
-              <c:forEach var="subject" items="${subjects}">
-                <li>${subject}</li>
+              <c:forEach var="subject" items="${tutor.subjectList}">
+                <li>${subject.title}</li>
               </c:forEach>
           </ul>
             </p>

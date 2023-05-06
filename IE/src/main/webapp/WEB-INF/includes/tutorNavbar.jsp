@@ -15,13 +15,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="<c:url value="/my_students"/>">My students</a>
+                    <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#getMyStudents').build()}">My students</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#orders').build()}">New orders</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="<c:url value="/my_profile_tutor"/>">My profile</a>
+                    <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#getProfile').build()}">My profile</a>
                 </li>
             </ul>
         </div>

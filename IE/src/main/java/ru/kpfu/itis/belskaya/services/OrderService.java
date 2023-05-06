@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.models.Order;
 import ru.kpfu.itis.belskaya.models.Student;
+import ru.kpfu.itis.belskaya.models.Tutor;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.repositories.OrderRepository;
 
@@ -30,7 +31,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    public List<Order> getOrdersByPage(int page) {
+    public Optional<List<Order>> getOrdersByPage(int page) {
         return orderRepository.getOrdersByPageNumber((page-1)*PAGE_SIZE, PAGE_SIZE);
     }
 
@@ -48,5 +49,22 @@ public class OrderService {
 
     public void updateOrder(Order updatedOrder) {
         orderRepository.save(updatedOrder);
+    }
+
+
+    public Optional<List<Order>> getSuitableOrders(Long tutorId) {
+        return orderRepository.findSuitableOrderForTutor(tutorId);
+    }
+
+    public Optional<List<Order>> getOrdersByTutor(Tutor tutor) {
+        return orderRepository.findOrdersByTutor(tutor);
+    }
+
+    public void cancelTutor(Long orderId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        if (order.isPresent()) {
+            order.get().setTutor(null);
+            orderRepository.save(order.get());
+        }
     }
 }

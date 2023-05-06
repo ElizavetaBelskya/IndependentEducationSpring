@@ -149,7 +149,7 @@ function createOrderForm(order, subjects) {
         };
 
         let result = await fetch(contextName + "/api/" + order.id, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },

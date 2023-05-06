@@ -29,8 +29,11 @@ public class Tutor extends User {
     private String phone;
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
     private float rating;
-    private boolean gender;
+
+    @Enumerated(value = EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "is_working_online")
     private boolean isWorkingOnline;

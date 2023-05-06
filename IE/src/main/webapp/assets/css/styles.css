@@ -376,12 +376,6 @@ body {
     margin-left: 25em
 }
 
-#card-order {
-    text-align: center;
-    width: 15em;
-    height: 10em;
-}
-
 #order-row {
     margin: 10%;
 }
@@ -521,4 +515,25 @@ input[type="number"] {
 
 .no-container {
     display: none;
+}
+
+#card-order {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    margin-bottom: 5px;
+}
+
+.card-body {
+    padding: 15px;
 }

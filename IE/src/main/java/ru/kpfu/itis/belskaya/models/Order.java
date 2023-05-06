@@ -24,10 +24,13 @@ public class Order {
 
     @Column(nullable = false)
     private String subject;
+
     @ManyToOne
     @JoinColumn(name = "author_id",  referencedColumnName = "id")
     private Student author;
+
     private String description;
+
     @Column(name = "tutor_gender", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Gender tutorGender;
@@ -50,13 +53,6 @@ public class Order {
     private Format online;
 
     private Integer price;
-
-
-    public enum Gender {
-        MALE,
-        FEMALE,
-        BOTH
-    }
 
     public enum Format {
         ONLINE,

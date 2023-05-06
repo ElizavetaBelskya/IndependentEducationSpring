@@ -6,7 +6,7 @@
 <header>
     <%@include file="/WEB-INF/includes/tutorNavbar.jsp" %>
 </header>
-<c:if test="${orders.size() > 0}">
+<c:if test="${orders != null}">
 <div id="carousel-student" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <c:forEach var="i" begin="0" end="${orders.size()-1}" step="3">
@@ -21,20 +21,17 @@
                         <div class="card order-card-for-delete">
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">${"Order #".concat(orders.get(i).getId().toString())}</h6>
-                                <h5 class="card-title order-card-editable">${students.get(i).getName()}</h5>
+                                <h5 class="card-title order-card-editable">${accounts.get(i).getName()}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">${students.get(i).getPhone()}</h6>
                                 <h6 class="card-subtitle mb-2 text-muted">${students.get(i).getEmail()}</h6>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">Price: ${orders.get(i).getPrice()}</li>
                                     <li class="list-group-item">
-                                            ${orders.get(i).getOnline() == null? "Both online and offline": (orders.get(i).getOnline()? "Online":"Offline")}
+                                            ${orders.get(i).getOnline() == 'BOTH'? "Both online and offline" : (orders.get(i).getOnline() == 'ONLINE'? 'online' : 'offline')}
                                     </li>
                                     <li class = "list-group-item">${orders.get(i).getSubject()}</li>
                                 </ul>
-                                <p class="card-text">
-                                    <mt:lastModifiedTag lastModified="${orders.get(i).getCreationDate()}" action = "${actionTitle}"/>
-                                </p>
-                                <form action="<c:url value="/my_students?action=reject"/>" method="post">
+                                <form action="" method="post">
                                     <input type="hidden" name="reject" value="${orders.get(i).getId()}">
                                     <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                 </form>
@@ -46,20 +43,17 @@
                             <div class="card order-card-for-delete">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">${"Order #".concat(orders.get(i+1).getId().toString())}</h6>
-                                    <h5 class="card-title order-card-editable">${students.get(i+1).getName()}</h5>
+                                    <h5 class="card-title order-card-editable">${accounts.get(i+1).getName()}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">${students.get(i+1).getPhone()}</h6>
                                     <h6 class="card-subtitle mb-2 text-muted">${students.get(i+1).getEmail()}</h6>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">Price: ${orders.get(i+1).getPrice()}</li>
                                         <li class="list-group-item">
-                                                ${orders.get(i+1).getOnline() == null? "Both online and offline": (orders.get(i+1).getOnline()? "Online":"Offline")}
+                                                ${orders.get(i+1).getOnline() == 'BOTH'? "Both online and offline" : (orders.get(i+1).getOnline() == 'ONLINE'? 'online' : 'offline')}
                                         </li>
                                         <li class = "list-group-item">${orders.get(i+1).getSubject()}</li>
                                     </ul>
-                                    <p class="card-text">
-                                        <mt:lastModifiedTag lastModified="${orders.get(i+1).getCreationDate()}" action = "${actionTitle}"/>
-                                    </p>
-                                    <form action="<c:url value="/my_students?action=reject"/>" method="post">
+                                    <form action="" method="post">
                                         <input type="hidden" name="reject" value="${orders.get(i+1).getId()}">
                                         <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                     </form>
@@ -72,20 +66,17 @@
                             <div class="card order-card-for-delete">
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-muted">${"Order #".concat(orders.get(i+2).getId().toString())}</h6>
-                                    <h5 class="card-title order-card-editable">${students.get(i+2).getName()}</h5>
+                                    <h5 class="card-title order-card-editable">${accounts.get(i+2).getName()}</h5>
                                     <h6 class="card-subtitle mb-2 text-muted">${students.get(i+2).getPhone()}</h6>
                                     <h6 class="card-subtitle mb-2 text-muted">${students.get(i+2).getEmail()}</h6>
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item">Price: ${orders.get(i+2).getPrice()}</li>
                                         <li class="list-group-item">
-                                                ${orders.get(i+2).getOnline() == null? "Both online and offline": (orders.get(i+2).getOnline()? "Online":"Offline")}
+                                                ${orders.get(i+2).getOnline() == 'BOTH'? "Both online and offline" : (orders.get(i+2).getOnline() == 'ONLINE'? 'online' : 'offline')}
                                         </li>
                                         <li class = "list-group-item">${orders.get(i+2).getSubject()}</li>
                                     </ul>
-                                    <p class="card-text">
-                                        <mt:lastModifiedTag lastModified="${orders.get(i+2).getCreationDate()}" action = "${actionTitle}"/>
-                                    </p>
-                                    <form action="<c:url value="/my_students?action=reject"/>" method="post">
+                                    <form action="" method="post">
                                         <input type="hidden" name="reject" value="${orders.get(i+2).getId()}">
                                         <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                     </form>

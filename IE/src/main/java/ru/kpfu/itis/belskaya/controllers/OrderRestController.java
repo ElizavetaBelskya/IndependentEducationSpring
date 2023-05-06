@@ -12,8 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
-import ru.kpfu.itis.belskaya.repositories.SubjectRepository;
 import ru.kpfu.itis.belskaya.services.OrderService;
+import ru.kpfu.itis.belskaya.services.SubjectService;
 import ru.kpfu.itis.belskaya.services.UserService;
 
 import java.util.List;
@@ -28,10 +28,13 @@ public class OrderRestController {
     private OrderService orderService;
 
     @Autowired
-    private UserService<Student> studentServiceStudent;
+    private UserService<Student> studentService;
 
     @Autowired
-    private SubjectRepository subjectRepository;
+    private UserService<Tutor> tutorService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     @DeleteMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
@@ -43,16 +46,16 @@ public class OrderRestController {
         return ResponseEntity.ok("Deleted");
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<String> updateOrder(@PathVariable("id") Long id,
                                               @RequestBody OrderForm orderForm,
                                               @AuthenticationPrincipal Account account) {
-        Student student = studentServiceStudent.findByAccount_Id(account.getId());
+        Student student = studentService.findByAccount_Id(account.getId());
         OrderFormToOrderConverter converter = new OrderFormToOrderConverter(student);
         Order updatedOrder = (Order) converter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
         Order orderById = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND, "Book not found"
+                HttpStatus.NOT_FOUND, "Order not found"
         ));
         updatedOrder.setId(orderById.getId());
         updatedOrder.setCreationDate(orderById.getCreationDate());
@@ -60,10 +63,23 @@ public class OrderRestController {
         return ResponseEntity.ok("Updated");
     }
 
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('TUTOR')")
+    public ResponseEntity<String> addTutorToOrder(@PathVariable("id") Long id,
+                                              @AuthenticationPrincipal Account account) {
+        Tutor tutor = tutorService.findByAccount_Id(account.getId());
+        Order order = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Order not found"
+        ));
+        order.setTutor(tutor);
+        orderService.updateOrder(order);
+        return ResponseEntity.ok("Updated");
+    }
+
     @GetMapping("/all")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Order>> getAllOrders(@AuthenticationPrincipal Account account) {
-        Student student = studentServiceStudent.findByAccount_Id(account.getId());
+        Student student = studentService.findByAccount_Id(account.getId());
         List<Order> orders = orderService.getOrdersByAuthor(student).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Orders not found"
         ));
@@ -73,7 +89,7 @@ public class OrderRestController {
     @GetMapping("/subjects")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<Subject>> getAllSubjects() {
-        List<Subject> subjects = subjectRepository.findAll();
+        List<Subject> subjects = subjectService.findAllSubjects();
         return ResponseEntity.of(Optional.of(subjects));
     }
 
