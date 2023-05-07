@@ -56,7 +56,6 @@
                                 <form:input type="password" path="password" placeholder="Password123" class="form-control form-control-lg" id="password" />
                                 <form:errors path="password" class="error-message" />
 
-
                                 <input type='submit' class="gradient-btn" value='Sign in'>
                                 <c:if test="${message != null}">
                                    ${message}

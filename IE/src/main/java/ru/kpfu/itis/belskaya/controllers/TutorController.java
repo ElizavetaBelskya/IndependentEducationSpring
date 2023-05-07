@@ -144,6 +144,15 @@ public class TutorController {
         return "/views/tutorRegistrationPage";
     }
 
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public String deleteProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        accountService.deleteAccount(account);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
+    }
+
+
 
 
 }

@@ -81,7 +81,7 @@
         <label for="price" class="form-label">Price:</label>
         <input type="number" id="price" value="" name="price" min="100" max="10000"/>
     </div>
-
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
     <input type="submit" class="btn btn-primary btn-edit-this" value="Edit">
 </div>
 

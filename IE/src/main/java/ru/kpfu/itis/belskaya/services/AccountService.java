@@ -42,6 +42,11 @@ public class AccountService implements UserDetailsService {
         }
     }
 
+    public void deleteAccount(Account account) {
+        account.setState(Account.State.DELETED);
+        accountRepository.save(account);
+    }
+
     public boolean registerUser(Account account, User user) throws DuplicateKeyException {
         // Я мучилась с абстракциями долго, все, хватит, просто switch case! тем более ролей, даже потенциально, немного
         switch (account.getRole()) {

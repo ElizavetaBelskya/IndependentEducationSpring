@@ -119,7 +119,6 @@
                                         </c:forEach>
                                     </c:if>
 
-
                                     <input type='submit' class="gradient-btn" value='Sign in'>
 
                                 </div>

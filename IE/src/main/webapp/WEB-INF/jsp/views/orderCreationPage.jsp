@@ -63,6 +63,7 @@
                     <form:errors path="price" />
                     <br>
 
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <input type="submit" class="btn btn-primary" value='Create' />
 
                 </form:form>

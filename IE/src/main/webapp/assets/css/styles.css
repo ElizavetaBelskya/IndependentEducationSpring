@@ -537,3 +537,13 @@ input[type="number"] {
 .card-body {
     padding: 15px;
 }
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-row form {
+    margin-right: 10px;
+}

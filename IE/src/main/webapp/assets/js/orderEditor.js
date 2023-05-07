@@ -1,3 +1,15 @@
+function getCookieValue(cookieName) {
+    const cookieArray = document.cookie.split(';');
+    for (let i = 0; i < cookieArray.length; i++) {
+        const cookie = cookieArray[i].trim();
+        if (cookie.startsWith(cookieName + '=')) {
+            return cookie.substring(cookieName.length + 1);
+        }
+    }
+    return null;
+}
+
+
 async function updateOrders() {
     let result = await fetch(contextName + "/api/all", {
         method: 'GET'
@@ -66,8 +78,11 @@ async function updateOrders() {
                 let orderId = card.querySelector(".order-id").value;
                 deleteBtn.addEventListener("click", async function (e) {
                     e.preventDefault();
+                    const csrfToken = getCookieValue("XSRF-TOKEN");
+                    const headers = new Headers();
+                    headers.append('X-XSRF-TOKEN', csrfToken);
                     let result = await fetch(contextName + "/api/" + orderId, {
-                        method: 'DELETE'
+                        method: 'DELETE', headers: headers
                     });
 
                     if (result.ok) {
@@ -148,11 +163,14 @@ function createOrderForm(order, subjects) {
             price
         };
 
+        const csrfToken = getCookieValue("XSRF-TOKEN");
+        const headers = new Headers();
+        headers.append('X-XSRF-TOKEN', csrfToken);
+        headers.append('Content-Type', 'application/json')
+
         let result = await fetch(contextName + "/api/" + order.id, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: JSON.stringify(updatedOrder)
         });
 

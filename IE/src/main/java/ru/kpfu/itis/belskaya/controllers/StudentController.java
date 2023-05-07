@@ -70,6 +70,15 @@ public class StudentController {
         return "/views/studentProfilePage";
     }
 
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public String deleteProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Account account = (Account) authentication.getPrincipal();
+        accountService.deleteAccount(account);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
+    }
+
+
     @RequestMapping(value = "/my_orders", method = RequestMethod.GET)
     public String getStudentOrders(ModelMap map) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

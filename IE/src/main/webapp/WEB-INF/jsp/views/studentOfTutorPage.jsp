@@ -32,6 +32,7 @@
                                     <li class = "list-group-item">${orders.get(i).getSubject()}</li>
                                 </ul>
                                 <form action="" method="post">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="reject" value="${orders.get(i).getId()}">
                                     <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                 </form>
@@ -54,6 +55,7 @@
                                         <li class = "list-group-item">${orders.get(i+1).getSubject()}</li>
                                     </ul>
                                     <form action="" method="post">
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <input type="hidden" name="reject" value="${orders.get(i+1).getId()}">
                                         <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                     </form>

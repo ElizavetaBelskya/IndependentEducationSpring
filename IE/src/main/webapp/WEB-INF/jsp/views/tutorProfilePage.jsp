@@ -42,9 +42,14 @@
             </p>
           </div>
 
-          <div>
-            <form method="GET" action="<c:url value="/logout"/>">
-              <input type='submit' class="btn btn-info" value='Log out'>
+          <div class="button-row">
+            <form method="GET" action="<c:url value='/logout'/>">
+              <input type='submit' class="gradient-btn" value='Log out'/>
+            </form>
+
+            <form method="POST" action="">
+              <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+              <input type='submit' class="gradient-btn" value='Delete account'/>
             </form>
           </div>
 

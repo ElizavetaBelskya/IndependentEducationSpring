@@ -22,6 +22,8 @@
             integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
             crossorigin="anonymous"></script>
 
+
+
     <c:if test="${scriptLink != null}">
         <script charset="UTF-8" src="<c:url value="${scriptLink}"/>"></script>
     </c:if>
