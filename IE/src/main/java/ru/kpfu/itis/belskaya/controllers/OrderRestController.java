@@ -71,7 +71,7 @@ public class OrderRestController {
         Order order = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Order not found"
         ));
-        order.setTutor(tutor);
+        order.getCandidates().add(tutor);
         orderService.updateOrder(order);
         return ResponseEntity.ok("Updated");
     }

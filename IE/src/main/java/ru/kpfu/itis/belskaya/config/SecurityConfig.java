@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.kpfu.itis.belskaya.models.User;
 import ru.kpfu.itis.belskaya.services.AccountService;
 import ru.kpfu.itis.belskaya.services.UserService;
@@ -32,9 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/tutor/register", "/student/register").permitAll()
                 .antMatchers("/tutor/**").hasAuthority("TUTOR")
                 .antMatchers("/student/**").hasAuthority("STUDENT")
+                .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/main").permitAll()
@@ -44,7 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordParameter("password")
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                .invalidateHttpSession(true)
                 .logoutSuccessUrl("/main?status=logout")
                 .and()
                 .exceptionHandling()

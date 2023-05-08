@@ -1,5 +1,8 @@
 package ru.kpfu.itis.belskaya.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +51,6 @@ public class RootConfig {
         dataSource.setUrl(env.getRequiredProperty("db.url"));
         dataSource.setUsername(env.getRequiredProperty("db.username"));
         dataSource.setPassword(env.getRequiredProperty("db.password"));
-
         return dataSource;
     }
 
@@ -62,7 +64,6 @@ public class RootConfig {
         jpaVendorAdapter.setGenerateDdl(true);
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
         entityManagerFactoryBean.setJpaProperties(getHibernateProperties());
-
         return entityManagerFactoryBean;
     }
 
@@ -74,7 +75,6 @@ public class RootConfig {
         properties.put("hibernate.enable_lazy_load_no_trans", env.getRequiredProperty("hibernate.enable_lazy_load_no_trans"));
         return properties;
     }
-
 
 
 

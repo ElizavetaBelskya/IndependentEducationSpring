@@ -61,6 +61,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     })
 
+    const text = document.getElementById("comment-text");
+    const comment = document.getElementById("comment")
+    if (text != null) {
+        text.addEventListener("input", function () {
+            comment.value = text.value;
+        });
+    }
 
 
 });

@@ -1,5 +1,6 @@
 package ru.kpfu.itis.belskaya.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "ie_tutor")
 public class Tutor extends User {
 
@@ -31,6 +33,8 @@ public class Tutor extends User {
     private String email;
 
     private float rating;
+
+    private String description;
 
     @Enumerated(value = EnumType.STRING)
     private Gender gender;
@@ -49,6 +53,10 @@ public class Tutor extends User {
             inverseJoinColumns = { @JoinColumn(name = "tutor_id", referencedColumnName = "id") }
     )
     private List<Subject> subjectList;
+
+    @ManyToMany(mappedBy = "candidates")
+    @JsonIgnoreProperties("candidates")
+    private List<Order> orders;
 
     @Override
     public void setAccount(Account account) {

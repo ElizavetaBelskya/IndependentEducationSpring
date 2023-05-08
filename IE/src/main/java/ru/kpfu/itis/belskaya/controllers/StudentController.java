@@ -3,28 +3,26 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.converters.StudentFormToAccountAndStudentConverter;
-import ru.kpfu.itis.belskaya.models.Account;
-import ru.kpfu.itis.belskaya.models.City;
-import ru.kpfu.itis.belskaya.models.Order;
-import ru.kpfu.itis.belskaya.models.Student;
+import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.models.forms.StudentForm;
 import ru.kpfu.itis.belskaya.services.*;
 import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +47,9 @@ public class StudentController {
     private OrderService orderService;
 
     @Autowired
+    private TutorService tutorService;
+
+    @Autowired
     private SubjectService subjectService;
 
     @Autowired
@@ -61,28 +62,64 @@ public class StudentController {
     private AccountService accountService;
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String getProfile(ModelMap map) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String getProfile(ModelMap map, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
         map.put("account", account);
         map.put("student", student);
         return "/views/studentProfilePage";
     }
 
+    @RequestMapping(value = "/my_tutors", method = RequestMethod.GET)
+    public String getTutorsAndCandidates(ModelMap map, @AuthenticationPrincipal Account account) {
+        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        List<Order> uncompletedOrders = orderService.getUncompletedOrdersByStudent(student);
+        List<List<Tutor>> candidatesLists = new ArrayList<>();
+        for (Order order : uncompletedOrders) {
+            candidatesLists.add(order.getCandidates());
+        }
+        List<Tutor> approvedTutors = orderService.getTutorsOfStudent(student);
+        map.put("uncompletedOrders", uncompletedOrders);
+        map.put("candidatesLists", candidatesLists);
+        map.put("approvedTutors", approvedTutors);
+        return "/views/tutorsAndCandidatesListPage";
+    }
+
+    @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=choose")
+    public String chooseTutor(@RequestParam("chooseOrderId") Long chooseOrderId,
+                              @RequestParam("chooseTutorId") Long chooseTutorId) {
+        orderService.setTutorToOrder(chooseOrderId, chooseTutorId);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
+    }
+
+    @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=reject")
+    public String rejectTutor(@RequestParam("rejectId") Long rejectId, @AuthenticationPrincipal Account account) {
+        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        orderService.rejectTutorFromStudentOrders(student, rejectId);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
+    }
+
+    @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=rated")
+    public String rateTutor(@RequestParam("idRatedTutor") Long id, @RequestParam("starCount") int starCount,
+                            @RequestParam("comment") String comment,
+                            @AuthenticationPrincipal Account account) {
+        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        RateDto rateDto = RateDto.builder().tutorId(id).student(student).rating(starCount).comment(comment).build();
+        tutorService.changeRating(rateDto);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
+    }
+
+
+
+
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public String deleteProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String deleteProfile(@AuthenticationPrincipal Account account) {
         accountService.deleteAccount(account);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
     }
 
 
     @RequestMapping(value = "/my_orders", method = RequestMethod.GET)
-    public String getStudentOrders(ModelMap map) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String getStudentOrders(ModelMap map, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
         Optional<List<Order>> orders = orderService.getOrdersByAuthor(student);
         if (orders.isPresent()) {
@@ -105,15 +142,13 @@ public class StudentController {
             RedirectAttributes redirectAttributes,
             @ModelAttribute("order") @Valid OrderForm orderForm,
             BindingResult result,
-            ModelMap map
+            ModelMap map, @AuthenticationPrincipal Account account
     ) {
         map.put("subjects", subjectService.findAllTitles());
         if (result.hasErrors()) {
             return "/views/orderCreationPage";
         } else {
             if (orderForm != null) {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                Account account = (Account) authentication.getPrincipal();
                 Student student = userServiceStudent.findByAccount_Id(account.getId());
                 OrderFormToOrderConverter orderConverter = new OrderFormToOrderConverter(student);
                 Order order = (Order) orderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));

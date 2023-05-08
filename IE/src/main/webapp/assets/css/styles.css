@@ -547,3 +547,24 @@ input[type="number"] {
 .button-row form {
     margin-right: 10px;
 }
+
+.review-card {
+    width: 50%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: white;
+    border-radius: 10px;
+    margin: 0 auto 30px;
+}
+
+
+.review-card .author {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.review-card .rating {
+    margin-bottom: 10px;
+}

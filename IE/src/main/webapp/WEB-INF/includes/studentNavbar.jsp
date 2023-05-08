@@ -16,10 +16,7 @@
           <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('SC#addOrderGet').build()}">Create a new order</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('SC#addOrderGet').build()}">My tutors</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('SC#addOrderGet').build()}">All tutors</a>
+          <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('SC#getTutorsAndCandidates').build()}">My tutors</a>
         </li>
         <li class="nav-item">
           <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('SC#getStudentOrders').build()}">My orders</a>

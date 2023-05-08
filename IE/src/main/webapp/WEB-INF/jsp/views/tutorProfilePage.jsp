@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <t:baseHead title="My profile"/>
 <body>
 <header>
@@ -33,6 +34,9 @@
               Gender: ${tutor.gender}
             </p>
             <p>
+              Description: ${tutor.description}
+            </p>
+            <p>
               Subjects:
               <ul>
               <c:forEach var="subject" items="${tutor.subjectList}">
@@ -41,7 +45,6 @@
           </ul>
             </p>
           </div>
-
           <div class="button-row">
             <form method="GET" action="<c:url value='/logout'/>">
               <input type='submit' class="gradient-btn" value='Log out'/>
@@ -52,12 +55,17 @@
               <input type='submit' class="gradient-btn" value='Delete account'/>
             </form>
           </div>
-
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<c:if test="${reviewsList != null}">
+  <c:forEach var="review" items="${reviewsList}">
+    <t:comment author="Student #${review.student.id}" rate="${review.rating}" comment="${review.comment}"/>
+  </c:forEach>
+</c:if>
 
 
 </body>

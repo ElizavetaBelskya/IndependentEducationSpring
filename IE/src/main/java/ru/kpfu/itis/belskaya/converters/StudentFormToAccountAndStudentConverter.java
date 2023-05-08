@@ -40,7 +40,7 @@ public class StudentFormToAccountAndStudentConverter implements GenericConverter
                     .city(studentForm.getCity())
                     .build();
             return account;
-        } else if (StudentForm.class.equals(typeDescriptor.getType()) && Tutor.class.equals(typeDescriptor1.getType())) {
+        } else if (StudentForm.class.equals(typeDescriptor.getType()) && Student.class.equals(typeDescriptor1.getType())) {
             StudentForm studentForm = (StudentForm) o;
             Student student = Student.builder()
                     .email(studentForm.getEmail())

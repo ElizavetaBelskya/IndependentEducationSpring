@@ -1,17 +1,14 @@
 package ru.kpfu.itis.belskaya.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.models.Order;
 import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.Tutor;
-import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.repositories.OrderRepository;
+import ru.kpfu.itis.belskaya.repositories.TutorRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +20,11 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private TutorRepository tutorRepository;
+
     public Optional<List<Order>> getOrdersByAuthor(Student student) {
-        return orderRepository.getOrdersByAuthor(student);
+        return orderRepository.findAllByAuthor(student);
     }
 
     public void createOrder(Order order) {
@@ -67,4 +67,29 @@ public class OrderService {
             orderRepository.save(order.get());
         }
     }
+
+    public List<Order> getUncompletedOrdersByStudent(Student student) {
+        return orderRepository.findOrdersByStudentWithoutTutor(student.getId());
+    }
+
+
+    public List<Tutor> getTutorsOfStudent(Student student) {
+        return orderRepository.findTutorsOfStudent(student.getId());
+    }
+
+    public void setTutorToOrder(Long orderId, Long tutorId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        if (order.isPresent()) {
+            Optional<Tutor> tutor = tutorRepository.findById(tutorId);
+            if (tutor.isPresent()) {
+                order.get().setTutor(tutor.get());
+                orderRepository.save(order.get());
+            }
+        }
+    }
+
+    public void rejectTutorFromStudentOrders(Student student, Long rejectId) {
+        orderRepository.rejectTutorFromStudentOrders(student.getId(), rejectId);
+    }
+
 }

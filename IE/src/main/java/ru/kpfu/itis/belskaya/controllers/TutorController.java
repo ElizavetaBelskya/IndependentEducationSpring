@@ -3,6 +3,7 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -47,12 +48,13 @@ public class TutorController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private TutorService tutorService;
+
 
 
     @RequestMapping(value = "/my_students", method = RequestMethod.GET)
-    public String getMyStudents(ModelMap map) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String getMyStudents(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
         Optional<List<Order>> tutorOrders = orderService.getOrdersByTutor(tutor);
         if (tutorOrders.isPresent()) {
@@ -74,9 +76,7 @@ public class TutorController {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public String orders(ModelMap map) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String orders(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
         Optional<List<Order>> orders = orderService.getSuitableOrders(tutor.getId());
         if (orders.isPresent()) {
@@ -88,12 +88,16 @@ public class TutorController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String getProfile(ModelMap map) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String getProfile(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Optional<List<Rate>> reviewsList = tutorService.getRatesOfTutor(tutor);
         map.put("account", account);
         map.put("tutor", tutor);
+        if (reviewsList.isPresent()) {
+            map.put("reviewsList", reviewsList.get());
+        } else {
+            map.put("reviewsList", null);
+        }
         return "/views/tutorProfilePage";
     }
 
@@ -145,9 +149,7 @@ public class TutorController {
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public String deleteProfile() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account account = (Account) authentication.getPrincipal();
+    public String deleteProfile( @AuthenticationPrincipal Account account) {
         accountService.deleteAccount(account);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
     }
