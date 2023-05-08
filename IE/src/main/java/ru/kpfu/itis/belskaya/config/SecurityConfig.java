@@ -2,6 +2,7 @@ package ru.kpfu.itis.belskaya.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -10,11 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.kpfu.itis.belskaya.models.User;
+import ru.kpfu.itis.belskaya.authentication.EmailRolePasswordAuthenticationProvider;
+import ru.kpfu.itis.belskaya.authentication.EmailRolePasswordFilter;
 import ru.kpfu.itis.belskaya.services.AccountService;
-import ru.kpfu.itis.belskaya.services.UserService;
 
 /**
  * @author Elizaveta Belskaya
@@ -22,27 +24,33 @@ import ru.kpfu.itis.belskaya.services.UserService;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan("ru.kpfu.itis.belskaya.config")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    public EmailRolePasswordAuthenticationProvider provider() {
+        return new EmailRolePasswordAuthenticationProvider(accountService(), passwordEncoder());
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(accountService()).passwordEncoder(passwordEncoder());
+        auth.authenticationProvider(provider());
+                //.userDetailsService(accountService()).passwordEncoder(passwordEncoder());
+    }
+
+
+    public EmailRolePasswordFilter filter() throws Exception {
+        return new EmailRolePasswordFilter(authenticationManagerBean(), "/main?status=failed", "/main?status=success");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/tutor/**").hasAuthority("TUTOR")
-                .antMatchers("/student/**").hasAuthority("STUDENT")
+        http.addFilterAt(filter(), UsernamePasswordAuthenticationFilter.class).authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/main").permitAll()
-                .defaultSuccessUrl("/main?status=success")
-                .failureUrl("/main?status=failed")
-                .usernameParameter("emailAndRole")
-                .passwordParameter("password")
+                .usernameParameter("email").passwordParameter("password")
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
@@ -53,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .accessDeniedPage("/403")
                 .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-
     }
 
     @Bean
@@ -66,5 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AccountService accountService(){
         return new AccountService();
     }
+
 
 }

@@ -13,13 +13,11 @@
         </div>
 
         <div>
-            <form:radiobutton path="role" value="_____Tutor" id="radio1" checked="checked" />
+            <form:radiobutton path="role" value="TUTOR" id="radio1" checked="checked" />
             <form:label for="radio1" class="form-check-label" path="role">Tutor</form:label>
-            <form:radiobutton path="role" value="_____Student" id="radio2" />
+            <form:radiobutton path="role" value="STUDENT" id="radio2" />
             <form:label for="radio2" class="form-check-label" path="role">Student</form:label>
         </div>
-
-        <form:hidden path="emailAndRole" id="emailAndRole"/>
 
         <input type="submit" class="btn-login" id="btn-login" value='Sign in' />
 

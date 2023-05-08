@@ -30,7 +30,7 @@ public class TutorFormToAccountAndTutorConverter implements GenericConverter {
         if (TutorForm.class.equals(typeDescriptor.getType()) && Account.class.equals(typeDescriptor1.getType())) {
             TutorForm tutorForm = (TutorForm) o;
             Account account = Account.builder()
-                    .emailAndRole(tutorForm.getEmail() + TUTOR)
+                    .email(tutorForm.getEmail())
                     .name(tutorForm.getName())
                     .passwordHash(tutorForm.getPassword())
                     .role(Account.Role.TUTOR)

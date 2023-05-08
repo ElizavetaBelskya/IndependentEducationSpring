@@ -119,7 +119,7 @@
     </div>
 </div>
 </c:if>
-<c:if test="${uncompletedOrders.size() > 0}">
+<c:if test="${uncompletedOrders == null || uncompletedOrders.size() > 0}">
 <c:forEach var="j" begin="0" end="${uncompletedOrders.size()-1}">
     <c:if test="${candidatesLists.get(j).size() > 0}">
     <h3 class="candidates-title">Candidates for order # ${uncompletedOrders.get(j).getId()}</h3>
@@ -259,7 +259,7 @@
     </div>
 </div>
 
-<c:if test="${(approvedTutors == null || approvedTutors.size() == 0) && (uncompletedOrders == null || uncompletedOrders.size() == 0)}">
+<c:if test="${approvedTutors.size() == 0 &&  uncompletedOrders.size() == 0}">
     <t:infoTextWithButton text="You have not created any orders" action="Create" link="/create_order"/>
 </c:if>
 

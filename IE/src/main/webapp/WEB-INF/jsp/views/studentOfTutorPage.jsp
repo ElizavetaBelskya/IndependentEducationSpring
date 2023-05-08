@@ -102,8 +102,8 @@
 </div>
 </c:if>
 
-<c:if test="${orders.size() == 0}">
-    <t:infoTextWithButton text="You don't have any students at the moment" action="Orders" link="/new_orders"/>
+<c:if test="${orders == null}">
+    <t:infoTextWithButton text="You don't have any students at the moment" action="Orders" link="/tutor/new_orders"/>
 </c:if>
 
 

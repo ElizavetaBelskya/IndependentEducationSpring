@@ -22,7 +22,8 @@ import java.util.Collections;
 @AllArgsConstructor
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "ie_account")
+@Table(name = "ie_account", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email", "role"})})
 public class Account implements CredentialsContainer, UserDetails {
 
     @Id
@@ -31,8 +32,8 @@ public class Account implements CredentialsContainer, UserDetails {
 
     private String name;
 
-    @Column(name = "email_and_role", nullable = false, unique = true)
-    private String emailAndRole;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "password_hash")
     private String passwordHash;
@@ -63,7 +64,7 @@ public class Account implements CredentialsContainer, UserDetails {
 
     @Override
     public String getUsername() {
-        return emailAndRole;
+        return id.toString();
     }
 
     @Override

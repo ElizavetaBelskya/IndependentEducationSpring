@@ -3,6 +3,7 @@ package ru.kpfu.itis.belskaya.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.convert.TypeDescriptor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -17,6 +18,7 @@ import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.converters.StudentFormToAccountAndStudentConverter;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
+import ru.kpfu.itis.belskaya.models.forms.RateDto;
 import ru.kpfu.itis.belskaya.models.forms.StudentForm;
 import ru.kpfu.itis.belskaya.services.*;
 import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
@@ -41,8 +43,6 @@ public class StudentController {
     @Autowired
     private EmailAndPhoneValidator emailAndPhoneValidator;
 
-    private final String STUDENT = "_____Student";
-
     @Autowired
     private OrderService orderService;
 
@@ -60,7 +60,7 @@ public class StudentController {
 
     @Autowired
     private AccountService accountService;
-
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
@@ -69,6 +69,7 @@ public class StudentController {
         return "/views/studentProfilePage";
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.GET)
     public String getTutorsAndCandidates(ModelMap map, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
@@ -84,6 +85,7 @@ public class StudentController {
         return "/views/tutorsAndCandidatesListPage";
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=choose")
     public String chooseTutor(@RequestParam("chooseOrderId") Long chooseOrderId,
                               @RequestParam("chooseTutorId") Long chooseTutorId) {
@@ -91,6 +93,7 @@ public class StudentController {
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=reject")
     public String rejectTutor(@RequestParam("rejectId") Long rejectId, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
@@ -98,6 +101,7 @@ public class StudentController {
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=rated")
     public String rateTutor(@RequestParam("idRatedTutor") Long id, @RequestParam("starCount") int starCount,
                             @RequestParam("comment") String comment,
@@ -110,14 +114,14 @@ public class StudentController {
 
 
 
-
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public String deleteProfile(@AuthenticationPrincipal Account account) {
         accountService.deleteAccount(account);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
     }
 
-
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_orders", method = RequestMethod.GET)
     public String getStudentOrders(ModelMap map, @AuthenticationPrincipal Account account) {
         Student student = userServiceStudent.findByAccount_Id(account.getId());
@@ -130,6 +134,7 @@ public class StudentController {
         return "/views/studentOrdersPage";
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/new_order", method = RequestMethod.GET)
     public String addOrderGet(ModelMap map) {
         map.put("subjects", subjectService.findAllTitles());
@@ -137,6 +142,7 @@ public class StudentController {
         return "/views/orderCreationPage";
     }
 
+    @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/new_order", method = RequestMethod.POST)
     public String addOrder(
             RedirectAttributes redirectAttributes,

@@ -23,10 +23,13 @@ public class OrderForm {
 
     private String description;
 
+    @NotBlank
     private String gender;
 
+    @NotBlank
     private Boolean rating;
 
+    @NotBlank
     private String online;
 
     @NotNull

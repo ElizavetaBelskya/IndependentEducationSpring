@@ -8,7 +8,7 @@
 <header>
     <%@include file="/WEB-INF/includes/tutorNavbar.jsp" %>
 </header>
-<c:if test="${orders.size() > 0}">
+<c:if test="${orders != null}">
 <div id="order-row" class="row">
             <c:forEach var="i" begin="0" end="${orders.size()}">
                 <c:if test="${orders.size() > i}">
@@ -32,7 +32,7 @@
 
 </c:if>
 
-<c:if test="${orders.size() == 0}">
+<c:if test="${orders == null}">
     <t:infoText bigText="There are no suitable orders for you" middleText="Wait for a while, please"/>
 </c:if>
 

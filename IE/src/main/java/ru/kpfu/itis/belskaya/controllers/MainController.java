@@ -35,7 +35,7 @@ public class MainController {
                         @Valid @ModelAttribute("loginForm") LoginForm loginForm,
                         BindingResult result,
                         ModelMap map) {
-        if (result.hasErrors() || status != null && status.equals("failed")) {
+        if (status != null && status.equals("failed")) {
             map.put("error", "User not found");
         } else {
             map.put("error", null);

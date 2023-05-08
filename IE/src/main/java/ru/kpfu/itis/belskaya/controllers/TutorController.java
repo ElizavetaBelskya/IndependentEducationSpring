@@ -2,9 +2,8 @@ package ru.kpfu.itis.belskaya.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.TypeDescriptor;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -51,8 +50,7 @@ public class TutorController {
     @Autowired
     private TutorService tutorService;
 
-
-
+    @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/my_students", method = RequestMethod.GET)
     public String getMyStudents(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
@@ -69,12 +67,15 @@ public class TutorController {
         return "/views/studentOfTutorPage";
     }
 
+    @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/my_students", method = RequestMethod.POST)
-    public String getStudentOfTutorPatch(@RequestParam("reject") Long orderId) {
-        orderService.cancelTutor(orderId);
+    public String getStudentOfTutorPost(@RequestParam("reject") Long orderId, @AuthenticationPrincipal Account account) {
+        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        orderService.cancelTutor(orderId, tutor);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getMyStudents").build() + "?rejected=true";
     }
 
+    @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String orders(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
@@ -87,6 +88,7 @@ public class TutorController {
         return "/views/newOrdersPage";
     }
 
+    @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
@@ -100,6 +102,7 @@ public class TutorController {
         }
         return "/views/tutorProfilePage";
     }
+
 
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)

@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
+import ru.kpfu.itis.belskaya.services.AccountService;
 import ru.kpfu.itis.belskaya.services.OrderService;
 import ru.kpfu.itis.belskaya.services.SubjectService;
 import ru.kpfu.itis.belskaya.services.UserService;
@@ -23,6 +24,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class OrderRestController {
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     private OrderService orderService;

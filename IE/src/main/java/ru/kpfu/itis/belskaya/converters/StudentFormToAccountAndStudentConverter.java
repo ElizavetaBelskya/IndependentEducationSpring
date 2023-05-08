@@ -32,7 +32,7 @@ public class StudentFormToAccountAndStudentConverter implements GenericConverter
         if (StudentForm.class.equals(typeDescriptor.getType()) && Account.class.equals(typeDescriptor1.getType())) {
             StudentForm studentForm = (StudentForm) o;
             Account account = Account.builder()
-                    .emailAndRole(studentForm.getEmail() + STUDENT)
+                    .email(studentForm.getEmail())
                     .name(studentForm.getName())
                     .passwordHash(studentForm.getPassword())
                     .role(Account.Role.STUDENT)

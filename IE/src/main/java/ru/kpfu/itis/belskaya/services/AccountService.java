@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import ru.kpfu.itis.belskaya.models.Account;
 import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.Tutor;
@@ -32,9 +31,14 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public Optional<Account> findAccount(String email, Account.Role role) {
+        return accountRepository.findByEmailAndAndRole(email, role);
+    }
+
+
     @Override
-    public UserDetails loadUserByUsername(final String emailAndRole) throws UsernameNotFoundException {
-        Optional<Account> user = accountRepository.findAccountByEmailAndRole(emailAndRole);
+    public UserDetails loadUserByUsername(final String id) throws UsernameNotFoundException {
+        Optional<Account> user = accountRepository.findAccountById(Long.parseLong(id));
         if (user.isPresent()) {
             return user.get();
         } else {

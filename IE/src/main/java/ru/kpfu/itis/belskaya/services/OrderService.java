@@ -60,10 +60,11 @@ public class OrderService {
         return orderRepository.findOrdersByTutor(tutor);
     }
 
-    public void cancelTutor(Long orderId) {
+    public void cancelTutor(Long orderId, Tutor tutor) {
         Optional<Order> order = orderRepository.findById(orderId);
         if (order.isPresent()) {
             order.get().setTutor(null);
+            order.get().getCandidates().remove(tutor);
             orderRepository.save(order.get());
         }
     }

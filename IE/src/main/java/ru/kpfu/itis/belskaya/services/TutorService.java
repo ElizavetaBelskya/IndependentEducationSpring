@@ -3,7 +3,7 @@ package ru.kpfu.itis.belskaya.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.belskaya.models.Rate;
-import ru.kpfu.itis.belskaya.models.RateDto;
+import ru.kpfu.itis.belskaya.models.forms.RateDto;
 import ru.kpfu.itis.belskaya.models.Tutor;
 import ru.kpfu.itis.belskaya.repositories.RatesRepository;
 import ru.kpfu.itis.belskaya.repositories.TutorRepository;

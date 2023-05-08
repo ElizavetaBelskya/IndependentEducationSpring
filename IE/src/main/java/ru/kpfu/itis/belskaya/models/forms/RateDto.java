@@ -1,6 +1,7 @@
-package ru.kpfu.itis.belskaya.models;
+package ru.kpfu.itis.belskaya.models.forms;
 
 import lombok.*;
+import ru.kpfu.itis.belskaya.models.Student;
 
 @Data
 @Getter
