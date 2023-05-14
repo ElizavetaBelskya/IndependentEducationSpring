@@ -9,13 +9,21 @@ function getCookieValue(cookieName) {
     return null;
 }
 
+function showModal(error) {
+    modal = new bootstrap.Modal(document.getElementById("answer-modal"));
+    if (modal != null) {
+        document.getElementById("error-text").innerText = error;
+        modal.show();
+    }
+}
+
 
 async function updateOrders() {
-    let result = await fetch(contextName + "/api/all", {
+    let result = await fetch(contextName + "/api/orders/all", {
         method: 'GET'
     });
 
-    let subjects = await fetch(contextName + "/api/subjects", {
+    let subjects = await fetch(contextName + "/api/orders/subjects", {
         method: 'GET'
     }).then(response => response.json());
 
@@ -83,12 +91,17 @@ async function updateOrders() {
                     headers.append('X-XSRF-TOKEN', csrfToken);
                     let result = await fetch(contextName + "/api/" + orderId, {
                         method: 'DELETE', headers: headers
-                    });
+                    })
 
                     if (result.ok) {
                         console.log("Order deleted");
                         updateOrders();
+                    } else {
+                        let reason = await result.json().catch(error => console.log(error));
+                        console.log("Error:", reason);
                     }
+
+
                 });
 
                 col.appendChild(card);
@@ -157,7 +170,7 @@ function createOrderForm(order, subjects) {
         const updatedOrder = {
             subject,
             online,
-            gender,
+            tutorGender: gender,
             rating: minRating,
             description,
             price
@@ -168,24 +181,37 @@ function createOrderForm(order, subjects) {
         headers.append('X-XSRF-TOKEN', csrfToken);
         headers.append('Content-Type', 'application/json')
 
-        let result = await fetch(contextName + "/api/" + order.id, {
-            method: 'PUT',
-            headers: headers,
-            body: JSON.stringify(updatedOrder)
-        });
+        try {
+            let result = await fetch(contextName + "/api/orders/" + order.id, {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(updatedOrder)
+            });
 
-
-        if (result.ok) {
-            container.style.display = 'none';
-            updateOrders();
-
+            if (result.status === 200) {
+                container.style.display = 'none';
+                updateOrders();
+            } else {
+                let reason;
+                try {
+                    reason = await result.json();
+                    reason.errors.forEach(error => {
+                        console.log("Error:", error.message);
+                    });
+                    const errorMessages = reason.errors.map(error => error.message);
+                    const errorMessageString = errorMessages.join(', ');
+                    showModal(errorMessageString)
+                } catch (error) {
+                    console.log("Error while parsing JSON response:", error);
+                }
+            }
+        } catch (error) {
+            console.log("Error:", error);
         }
 
     });
 
 }
-
-
 
 
 document.addEventListener('DOMContentLoaded', function(){

@@ -23,20 +23,18 @@ public class OrderForm {
 
     private String description;
 
-    @NotBlank
+    @NotBlank(message = "It can't be empty")
     private String gender;
 
-    @NotBlank
     private Boolean rating;
 
-    @NotBlank
+    @NotBlank(message = "It can't be empty")
     private String online;
 
-    @NotNull
+    @NotNull(message = "It can't be empty")
     @Min(value = 0, message = "Price must be a positive value")
     @Max(value = 10000, message = "The price should be adequate")
     private Integer price;
-
 
 
 }

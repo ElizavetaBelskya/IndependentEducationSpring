@@ -14,7 +14,7 @@ import ru.kpfu.itis.belskaya.converters.TutorFormToAccountAndTutorConverter;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.TutorForm;
 import ru.kpfu.itis.belskaya.services.*;
-import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
+import ru.kpfu.itis.belskaya.validators.EmailAndPhoneApiValidator;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -33,7 +33,7 @@ public class TutorController {
     private UserService<Tutor> userServiceTutor;
 
     @Autowired
-    private EmailAndPhoneValidator emailAndPhoneValidator;
+    private EmailAndPhoneApiValidator emailAndPhoneApiValidator;
 
     @Autowired
     private OrderService orderService;
@@ -119,10 +119,10 @@ public class TutorController {
                                BindingResult result,
                                ModelMap map) {
         if (!result.hasErrors()) {
-            if (!emailAndPhoneValidator.validateEmail(tutorForm.getEmail())) {
+            if (!emailAndPhoneApiValidator.validateEmail(tutorForm.getEmail())) {
                 redirectAttributes.addFlashAttribute("message", "Your email is not real");
                 return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("TC#register").build() + "?status=failed";
-            } else if (!emailAndPhoneValidator.validatePhone(tutorForm.getPhone(), tutorForm.getCity().getCountryCode())) {
+            } else if (!emailAndPhoneApiValidator.validatePhone(tutorForm.getPhone(), tutorForm.getCity().getCountryCode())) {
                 redirectAttributes.addFlashAttribute("message", "Your phone is not real or you selected wrong country");
                 return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("TC#register").build() + "?status=failed";
             }

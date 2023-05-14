@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (btn && orderId) {
                 btn.addEventListener('click', async function(e) {
                     e.preventDefault();
-                    const result = await fetch(contextName + "/api/" + orderId, {
+                    const result = await fetch(contextName + "/api/orders/" + orderId, {
                         method: 'PATCH', headers: headers
                     });
                     if (result.ok) {

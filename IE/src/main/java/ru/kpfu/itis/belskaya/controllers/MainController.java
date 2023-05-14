@@ -1,18 +1,16 @@
 package ru.kpfu.itis.belskaya.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.NoHandlerFoundException;
 import ru.kpfu.itis.belskaya.exceptions.NotFoundException;
-import ru.kpfu.itis.belskaya.models.Account;
 import ru.kpfu.itis.belskaya.models.Rate;
 import ru.kpfu.itis.belskaya.models.Tutor;
 import ru.kpfu.itis.belskaya.models.forms.LoginForm;
 import ru.kpfu.itis.belskaya.services.TutorService;
-import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
 
 
 import javax.validation.Valid;
@@ -59,6 +57,13 @@ public class MainController {
         } else {
             throw new NotFoundException();
         }
+    }
+
+    @GetMapping(value = "/forbidden")
+    public String forbidden(ModelMap map) {
+        map.put("status", HttpStatus.FORBIDDEN.value());
+        map.put("alert", "403: you are not allowed to access this page");
+        return "/views/errorPage";
     }
 
 

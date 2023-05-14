@@ -4,15 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.kpfu.itis.belskaya.aspects.LoggingAspect;
 import ru.kpfu.itis.belskaya.models.Student;
 import ru.kpfu.itis.belskaya.models.Tutor;
 import ru.kpfu.itis.belskaya.services.UserService;
@@ -26,9 +25,12 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
+@ComponentScan("ru.kpfu.itis.belskaya.aspects")
 @EnableJpaRepositories("ru.kpfu.itis.belskaya.repositories")
-@PropertySource("classpath:app.properties")
+@PropertySource({"classpath:app.properties", "classpath:log4j.properties"})
 public class RootConfig {
+
     @Resource
     private Environment env;
 

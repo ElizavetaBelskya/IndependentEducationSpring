@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 @AllArgsConstructor
 @PropertySource("classpath:app.properties")
-public class EmailAndPhoneValidator {
+public class EmailAndPhoneApiValidator {
 
     @Resource
     private Environment env;

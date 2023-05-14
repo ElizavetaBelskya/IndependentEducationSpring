@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.kpfu.itis.belskaya.converters.OrderFormToOrderConverter;
+import ru.kpfu.itis.belskaya.converters.OrderConverter;
 import ru.kpfu.itis.belskaya.converters.StudentFormToAccountAndStudentConverter;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.forms.OrderForm;
 import ru.kpfu.itis.belskaya.models.forms.RateDto;
 import ru.kpfu.itis.belskaya.models.forms.StudentForm;
 import ru.kpfu.itis.belskaya.services.*;
-import ru.kpfu.itis.belskaya.validators.EmailAndPhoneValidator;
+import ru.kpfu.itis.belskaya.validators.EmailAndPhoneApiValidator;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class StudentController {
 
 
     @Autowired
-    private EmailAndPhoneValidator emailAndPhoneValidator;
+    private EmailAndPhoneApiValidator emailAndPhoneApiValidator;
 
     @Autowired
     private OrderService orderService;
@@ -156,7 +156,7 @@ public class StudentController {
         } else {
             if (orderForm != null) {
                 Student student = userServiceStudent.findByAccount_Id(account.getId());
-                OrderFormToOrderConverter orderConverter = new OrderFormToOrderConverter(student);
+                OrderConverter orderConverter = new OrderConverter(student);
                 Order order = (Order) orderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
                 orderService.createOrder(order);
                 redirectAttributes.addFlashAttribute("answer", "Successfully created");
@@ -178,10 +178,10 @@ public class StudentController {
                                BindingResult result,
                                ModelMap map) {
         if (!result.hasErrors()) {
-            if (!emailAndPhoneValidator.validateEmail(studentForm.getEmail())) {
+            if (!emailAndPhoneApiValidator.validateEmail(studentForm.getEmail())) {
                 redirectAttributes.addFlashAttribute("message", "Your email is not real");
                 return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
-            } else if (!emailAndPhoneValidator.validatePhone(studentForm.getPhone(), studentForm.getCity().getCountryCode())) {
+            } else if (!emailAndPhoneApiValidator.validatePhone(studentForm.getPhone(), studentForm.getCity().getCountryCode())) {
                 redirectAttributes.addFlashAttribute("message", "Your phone is not real or you selected wrong country");
                 return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
             }

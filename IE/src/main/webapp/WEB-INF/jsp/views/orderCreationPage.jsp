@@ -28,7 +28,7 @@
                     <form:radiobutton path="online" value="OFFLINE"/>
 
                     <form:label class="form-label" path="online">Both</form:label>
-                    <form:radiobutton path="online" value="BOTH"/>
+                    <form:radiobutton path="online" value="BOTH" checked="true"/>
                     <br>
 
 
@@ -39,7 +39,7 @@
                     <form:radiobutton path="gender" value="FEMALE"/>
 
                     <form:label class="form-label" path="gender">Both</form:label>
-                    <form:radiobutton path="gender" value="BOTH"/>
+                    <form:radiobutton path="gender" value="BOTH" checked="true"/>
                     <br>
 
 

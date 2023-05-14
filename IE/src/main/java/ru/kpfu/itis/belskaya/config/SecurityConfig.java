@@ -56,11 +56,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                 .invalidateHttpSession(true)
-                .logoutSuccessUrl("/main?status=logout")
+                .logoutSuccessUrl("/main?status=logout").and()
+                .exceptionHandling().accessDeniedPage("/forbidden")
                 .and()
-                .exceptionHandling()
-                .accessDeniedPage("/403")
-                .and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrf().ignoringAntMatchers("/main")
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
     @Bean
