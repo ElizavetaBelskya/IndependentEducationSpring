@@ -96,8 +96,6 @@ public class Account implements CredentialsContainer, UserDetails {
     }
 
     public enum Role {
-        USER("User"),
-        ADMIN("Admin"),
         STUDENT("Student"),
         TUTOR("Tutor");
 

@@ -1,12 +1,9 @@
 package ru.kpfu.itis.belskaya.controllers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,8 +27,6 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionController {
 
-    //private final Logger logger = LogManager.getLogger(ExceptionController.class.getName());
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object catchBadRequest(HttpServletRequest req, Exception exception) {
@@ -42,17 +37,15 @@ public class ExceptionController {
     @ExceptionHandler({NoHandlerFoundException.class, NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String catchNotFoundStatus(HttpServletRequest req, Exception exception) {
-        //logger.info("BELSKAYA LOGS " + exception.getMessage());
         req.setAttribute("alert", "This page does not exist");
         return "/views/errorPage";
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String catchInternalErrorStatus(HttpServletRequest req, Exception exception) throws Exception {
-        //logger.debug(throwable.getMessage());
-        if (exception.getClass().equals(AccessDeniedException.class)) {
-            throw exception;
+    public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) throws Throwable {
+        if (throwable.getClass().equals(AccessDeniedException.class)) {
+            throw throwable;
         }
         req.setAttribute("alert", "500: Internal Server Error");
         return "/views/errorPage";
