@@ -10,6 +10,7 @@ import ru.kpfu.itis.belskaya.exceptions.NotFoundException;
 import ru.kpfu.itis.belskaya.models.Rate;
 import ru.kpfu.itis.belskaya.models.Tutor;
 import ru.kpfu.itis.belskaya.models.forms.LoginForm;
+import ru.kpfu.itis.belskaya.services.StudentService;
 import ru.kpfu.itis.belskaya.services.TutorService;
 
 
@@ -27,6 +28,9 @@ public class MainController {
 
     @Autowired
     private TutorService tutorService;
+
+    @Autowired
+    private StudentService studentService;
 
     @RequestMapping(value = "/main")
     public String login(@RequestParam(required = false) String status,
@@ -48,6 +52,8 @@ public class MainController {
             Optional<List<Rate>> reviewsList = tutorService.getRatesOfTutor(tutor.get());
             map.put("account", tutor.get().getAccount());
             map.put("tutor", tutor.get());
+            map.put("studentCount", studentService.getStudentsCountByTutor(tutor.get()));
+            map.put("mapSubjectToAmount", tutorService.getMapSubjectToStudentsAmount(tutor.get()));
             if (reviewsList.isPresent()) {
                 map.put("reviewsList", reviewsList.get());
             } else {

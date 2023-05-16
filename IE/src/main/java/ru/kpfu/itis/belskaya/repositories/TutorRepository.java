@@ -19,4 +19,6 @@ public interface TutorRepository extends JpaRepository<Tutor, Long> {
     Tutor findByAccount_Id(Long accountId);
 
 
+
+
 }

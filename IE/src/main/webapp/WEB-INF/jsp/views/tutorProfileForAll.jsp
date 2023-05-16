@@ -1,11 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<t:baseHead title="My profile"/>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
+<t:baseHead title="Tutor profile"/>
 <body>
 <header>
-    <%@include file="/WEB-INF/includes/tutorNavbar.jsp" %>
+    <security:authorize access="hasAuthority('TUTOR')">
+        <%@ include file="/WEB-INF/includes/tutorNavbar.jsp" %>
+    </security:authorize>
+    <security:authorize access="hasAuthority('STUDENT')">
+        <%@ include file="/WEB-INF/includes/studentNavbar.jsp" %>
+    </security:authorize>
+    <security:authorize access="isAnonymous()">
+        <%@ include file="/WEB-INF/includes/anonNavbar.jsp" %>
+    </security:authorize>
 </header>
 <div class="container h-100" id="reg-container">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -31,10 +39,13 @@
                             Description: ${tutor.description}
                         </p>
                         <p>
+                            Total number of students: ${studentCount}
+                        </p>
+                        <p>
                             Subjects:
                         <ul>
-                            <c:forEach var="subject" items="${tutor.subjectList}">
-                                <li>${subject.title}</li>
+                            <c:forEach var="entry" items="${mapSubjectToAmount}">
+                                <li>${entry.key} - ${entry.value} students</li>
                             </c:forEach>
                         </ul>
                         </p>

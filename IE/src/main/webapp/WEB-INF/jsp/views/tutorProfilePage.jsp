@@ -37,6 +37,9 @@
               Description: ${tutor.description}
             </p>
             <p>
+              Total number of students: ${studentCount}
+            </p>
+            <p>
               Subjects:
               <ul>
               <c:forEach var="subject" items="${tutor.subjectList}">
