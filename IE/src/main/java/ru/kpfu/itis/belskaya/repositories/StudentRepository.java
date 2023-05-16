@@ -18,7 +18,8 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    Optional<Student> findAccountByEmailOrPhone(String email, String phone);
+    @Query("SELECT s from Student s where s.email = :email or s.phone = :phone")
+    List<Student> findAccountByEmailOrPhone(@Param("email") String email, @Param("phone") String phone);
 
     Student findByAccount_Id(Long accountId);
 

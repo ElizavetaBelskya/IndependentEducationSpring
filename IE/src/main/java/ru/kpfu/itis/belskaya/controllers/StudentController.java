@@ -39,7 +39,6 @@ import java.util.Optional;
 @RequestMapping("/student")
 public class StudentController {
 
-
     @Autowired
     private EmailAndPhoneApiValidator emailAndPhoneApiValidator;
 
@@ -60,6 +59,7 @@ public class StudentController {
 
     @Autowired
     private AccountService accountService;
+
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map, @AuthenticationPrincipal Account account) {
@@ -191,7 +191,8 @@ public class StudentController {
             try {
                 boolean registered = accountService.registerUser(account, student);
                 if (registered) {
-                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#addOrderGet").build();
+                    redirectAttributes.addFlashAttribute("message", "Successfully registered");
+                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=success";
                 } else  {
                     return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("SC#register").build() + "?status=failed";
                 }

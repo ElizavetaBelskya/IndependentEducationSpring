@@ -98,7 +98,7 @@ async function updateOrders() {
                     const csrfToken = getCookieValue("XSRF-TOKEN");
                     const headers = new Headers();
                     headers.append('X-XSRF-TOKEN', csrfToken);
-                    let result = await fetch(contextName + "/api/" + orderId, {
+                    let result = await fetch(contextName + "/api/orders/" + orderId, {
                         method: 'DELETE', headers: headers
                     })
 

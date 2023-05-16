@@ -44,7 +44,8 @@ public class OrderService {
     }
 
     public void deleteOrder(Order order) {
-        orderRepository.delete(order);
+        order.setState(Order.State.DELETED);
+        orderRepository.save(order);
     }
 
     public void updateOrder(Order updatedOrder) {

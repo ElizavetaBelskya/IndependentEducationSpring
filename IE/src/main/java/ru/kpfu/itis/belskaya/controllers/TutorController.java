@@ -134,7 +134,7 @@ public class TutorController {
                 boolean registered = accountService.registerUser(account, tutor);
                 if (registered) {
                     redirectAttributes.addFlashAttribute("message", "Successfully registered");
-                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("TC#register").build();
+                    return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("TC#register").build() + "?status=success";
                 } else {
                     redirectAttributes.addFlashAttribute("message", "Registration failed");
                     return "redirect:"+ MvcUriComponentsBuilder.fromMappingName("TC#register").build() + "?status=failed";

@@ -61,10 +61,10 @@ public class LoggingAspect {
         }
     }
 
-    @AfterThrowing(pointcut = "execution(* ru.kpfu.itis.belskaya..*(..))", throwing = "exception")
-    public void logException(JoinPoint joinPoint, Throwable exception) {
-        log.warn(exception.getMessage());
-    }
+//    @AfterThrowing(pointcut = "execution(* ru.kpfu.itis.belskaya..*(..))", throwing = "exception")
+//    public void logException(JoinPoint joinPoint, Throwable exception) {
+//        log.warn(exception.getMessage());
+//    }
 
 
 }

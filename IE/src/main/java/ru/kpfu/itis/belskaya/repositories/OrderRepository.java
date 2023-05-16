@@ -24,7 +24,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<List<Order>> getOrdersByPageNumber(@Param("startIndex") int startIndex, @Param("pageSize") int pageSize);
 
 
-    Optional<List<Order>> findAllByAuthor(Student author);
+    @Query("SELECT o from Order o where o.author = :author and o.state = 'ACTUAL'")
+    Optional<List<Order>> findAllByAuthor(@Param("author") Student author);
 
     Optional<Order> findById(Long id);
 
@@ -36,7 +37,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                     "AND o.tutor IS NULL AND NOT t.id IN (select candidates.id from o.candidates candidates) " +
                     "AND o.minRating <= t.rating " +
                     "AND (o.tutorGender = t.gender OR o.tutorGender = 'BOTH') " +
-                    "AND o.subject in (select s.title from t.subjectList s) " +
+                    "AND o.subject in (select s.title from t.subjectList s) AND o.state = 'ACTUAL'" +
             "ORDER BY o.creationDate"
     )
     Optional<List<Order>> findSuitableOrderForTutor(@Param("tutorId") Long tutorId);
@@ -44,7 +45,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<List<Order>> findOrdersByTutor(Tutor tutor);
 
 
-    @Query("SELECT o FROM Order o WHERE o.tutor is null and o.author.id = :studentId")
+    @Query("SELECT o FROM Order o WHERE o.tutor is null and o.author.id = :studentId and o.state = 'ACTUAL'")
     List<Order> findOrdersByStudentWithoutTutor(@Param("studentId") Long studentId);
 
 
@@ -56,6 +57,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Modifying
     @Query("UPDATE Order o SET o.tutor = null WHERE o.author.id = :studentId AND o.tutor.id = :rejectId")
     void rejectTutorFromStudentOrders(@Param("studentId") Long studentId, @Param("rejectId") Long rejectId);
+
 
 
 }

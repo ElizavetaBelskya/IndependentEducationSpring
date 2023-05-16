@@ -16,34 +16,34 @@
 
                 <form:form method="POST" modelAttribute="order">
 
-                    <form:label class="form-label" path="subject">Subject</form:label>
+                    <form:label  path="subject">Subject</form:label>
                     <form:select path="subject" items="${subjects}"/>
                     <br>
 
 
-                    <form:label class="form-label" path="online">Online</form:label>
+                    <form:label path="online">Online</form:label>
                     <form:radiobutton path="online" value="ONLINE"/>
 
-                    <form:label class="form-label" path="online">Offline</form:label>
+                    <form:label path="online">Offline</form:label>
                     <form:radiobutton path="online" value="OFFLINE"/>
 
-                    <form:label class="form-label" path="online">Both</form:label>
+                    <form:label path="online">Both</form:label>
                     <form:radiobutton path="online" value="BOTH" checked="true"/>
                     <br>
 
 
-                    <form:label class="form-label" path="gender">Male</form:label>
+                    <form:label path="gender">Male</form:label>
                     <form:radiobutton path="gender" value="MALE"/>
 
-                    <form:label class="form-label" path="gender">Female</form:label>
+                    <form:label path="gender">Female</form:label>
                     <form:radiobutton path="gender" value="FEMALE"/>
 
-                    <form:label class="form-label" path="gender">Both</form:label>
+                    <form:label path="gender">Both</form:label>
                     <form:radiobutton path="gender" value="BOTH" checked="true"/>
                     <br>
 
 
-                    <form:label class="form-label" path="rating">
+                    <form:label path="rating">
                         Only with a rating greater than 4.0
                     </form:label>
                     <form:checkbox path="rating"/>
@@ -59,7 +59,7 @@
                     <br>
 
                     <form:label path="price"/>
-                    <form:input type="number" min="100" max="10000" path="price"/>
+                    <form:input type="number" required="true" min="100" max="10000" path="price"/>
                     <form:errors path="price" />
                     <br>
 

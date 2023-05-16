@@ -42,11 +42,6 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime creationDate;
 
-    @PrePersist
-    private void updateCreationDate() {
-        creationDate = LocalDateTime.now();
-    }
-
     @ManyToOne(cascade = { CascadeType.DETACH }, fetch = FetchType.LAZY)
     @JoinColumn(name = "tutor_id", referencedColumnName = "id")
     @JsonIgnoreProperties("orders")
@@ -67,10 +62,25 @@ public class Order {
 
     private Integer price;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private State state;
+
+    public enum State {
+        ACTUAL,
+        DELETED
+    }
+
     public enum Format {
         ONLINE,
         OFFLINE,
         BOTH
+    }
+
+    @PrePersist
+    private void updateColumns() {
+        creationDate = LocalDateTime.now();
+        state = State.ACTUAL;
     }
 
 }

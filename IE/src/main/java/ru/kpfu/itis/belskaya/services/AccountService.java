@@ -35,9 +35,8 @@ public class AccountService implements UserDetailsService {
         return accountRepository.findByEmailAndAndRole(email, role);
     }
 
-
     @Override
-    public UserDetails loadUserByUsername(final String id) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         Optional<Account> user = accountRepository.findAccountById(Long.parseLong(id));
         if (user.isPresent()) {
             return user.get();
@@ -63,14 +62,13 @@ public class AccountService implements UserDetailsService {
                     user.setAccount(addedAccount);
                     Tutor tutor = (Tutor) user;
                     Tutor createdUser = tutorRepository.save(tutor);
-                    if (createdUser != null) {
+                    if (createdUser.getId() != null) {
                         return true;
                     }
                 }
-                break;
             }
             case STUDENT: {
-                if (studentRepository.findAccountByEmailOrPhone(user.getEmail(), user.getPhone()).isPresent()) {
+                if (!studentRepository.findAccountByEmailOrPhone(user.getEmail(), user.getPhone()).isEmpty()) {
                     throw new DuplicateKeyException("User already registered");
                 } else {
                     account.setPasswordHash(passwordEncoder.encode(account.getPassword()));
@@ -78,11 +76,10 @@ public class AccountService implements UserDetailsService {
                     user.setAccount(addedAccount);
                     Student student = (Student) user;
                     Student createdUser = studentRepository.save(student);
-                    if (createdUser != null) {
+                    if (createdUser.getId() != null) {
                         return true;
                     }
                 }
-                break;
             }
         }
 

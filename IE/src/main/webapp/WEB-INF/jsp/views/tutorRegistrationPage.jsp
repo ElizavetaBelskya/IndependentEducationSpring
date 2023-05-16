@@ -22,16 +22,14 @@
 
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">
-
                                             <form:label class="form-label"
                                                         path="name">Passport name since big letter</form:label>
                                             <form:input path="name" type="text" id="name-reg-student"
                                                         class="form-control form-control-lg" name="name"
                                                         placeholder="Name" aria-label="Username"
                                                         pattern="[A-Z][a-z]{1,30}" maxlength="31"
-                                                        aria-describedby="basic-addon1"/>
+                                                        aria-describedby="basic-addon1" required="true"/>
                                             <form:errors path="name" class="error-message"/>
-
 
                                         </div>
 
@@ -39,7 +37,7 @@
                                         <form:input id="email-reg-student" class="form-control form-control-lg"
                                                     name='email' placeholder="email@example.com"
                                                     pattern="[A-Za-z0-9-]{2,50}@[a-z]{2,20}.[a-z]{2,4}"
-                                                    maxlength="76" type="email" path="email"/>
+                                                    maxlength="76" type="email" path="email" required="true"/>
                                         <form:errors path="email" class="error-message"/><br>
 
                                     </div>
@@ -50,7 +48,7 @@
                                                     for="phone-reg-student">Phone</form:label>
                                         <form:input path="phone" type="text" id="phone-reg-student"
                                                     class="form-control form-control-lg" name='phone'
-                                                    placeholder="89000000000"
+                                                    placeholder="89000000000" required="true"
                                                     pattern="[0-9]{11}" minlength="11" maxlength="11"/>
                                         <form:errors path="phone" class="error-message"/>
 
@@ -80,7 +78,7 @@
 
                                     <div class="mb-4 pb-2">
                                         <form:label path="password" class="form-label">Password</form:label>
-                                        <form:input type="password" path="password" placeholder="Password123"
+                                        <form:input type="password" path="password" placeholder="Password123" required="true"
                                                     class="form-control form-control-lg" id="password"/>
                                         <form:errors path="password" class="error-message"/>
                                     </div>
@@ -118,9 +116,11 @@
                                             </div>
                                         </c:forEach>
                                     </c:if>
+                                    <form:errors path="subjects" class="error-message"/>
 
-                                    <input type='submit' class="gradient-btn" value='Sign in'>
-
+                                    <div>
+                                        <input type='submit' class="gradient-btn" value='Sign in'>
+                                    </div>
                                 </div>
                             </div>
                         </div>
