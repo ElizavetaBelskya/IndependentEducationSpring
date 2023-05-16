@@ -1,3 +1,4 @@
+// функция для получения значения куки по ее названию
 function getCookieValue(cookieName) {
     const cookieArray = document.cookie.split(';');
     for (let i = 0; i < cookieArray.length; i++) {
@@ -9,6 +10,7 @@ function getCookieValue(cookieName) {
     return null;
 }
 
+// показ модального окна в случае ошибки
 function showModal(error) {
     modal = new bootstrap.Modal(document.getElementById("answer-modal"));
     if (modal != null) {
@@ -19,14 +21,17 @@ function showModal(error) {
 
 
 async function updateOrders() {
+    // получаем все заявки данного ученика
     let result = await fetch(contextName + "/api/orders/all", {
         method: 'GET'
     });
 
+    // получаем все возможные предметы
     let subjects = await fetch(contextName + "/api/orders/subjects", {
         method: 'GET'
     }).then(response => response.json());
 
+    // если получаем не найдено, то студент видит пустой экран
     if (result.status === 404) {
         const carousel = document.querySelector(".carousel");
         carousel.innerHTML = '';
@@ -37,12 +42,14 @@ async function updateOrders() {
         container.style.display = 'flex';
     }
 
+    // если все хорошо, пользователь видит список своих заявок
     if (result.ok) {
         let orders = await result.json();
 
         const container = document.querySelector(".carousel-inner");
         container.innerHTML = '';
 
+        // вот здесь закидываем в карусель карточки заказов
         for (let i = 0; i < orders.length; i += 3) {
             const item = document.createElement("div");
             item.classList.add("carousel-item");
@@ -76,6 +83,7 @@ async function updateOrders() {
             `;
                 let deleteBtn = card.querySelector('.delete-btn')
                 let updateBtn = card.querySelector('.edit-btn')
+                // на кнопку updateBtn вешаем действие формирования окошка редактирования
                 updateBtn.addEventListener('click', (function(order) {
                     return function() {
                         createOrderForm(order, subjects);
@@ -83,6 +91,7 @@ async function updateOrders() {
                 })(order));
 
 
+                // тут вешаем на кнопку deleteBtn удаление заказа
                 let orderId = card.querySelector(".order-id").value;
                 deleteBtn.addEventListener("click", async function (e) {
                     e.preventDefault();
@@ -94,14 +103,13 @@ async function updateOrders() {
                     })
 
                     if (result.ok) {
+                        // когда заказ удалился успешно, обновляем список заказов
                         console.log("Order deleted");
                         updateOrders();
                     } else {
                         let reason = await result.json().catch(error => console.log(error));
                         console.log("Error:", reason);
                     }
-
-
                 });
 
                 col.appendChild(card);
