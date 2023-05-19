@@ -4,29 +4,25 @@ Content-Type: application/x-www-form-urlencoded
 
 email=nefrf@mail.ru&password=liza2003&role=TUTOR
 
-<> 2023-05-13T234600.200.html
-<> 2023-05-13T231419.200.html
-<> 2023-05-13T222553.200.html
 
 ### Получение существующего заказа по id (может осуществлять любой аутентифицированный пользователь)
 GET http://localhost:8080/api/orders/3
-Cookie: JSESSIONID=916F0236E43FEDA1CD2EF69742E0C958; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
-<> 2023-05-13T214051.200.json
 
 ### Получение не существующего заказа по id
 GET http://localhost:8080/api/orders/999
-Cookie:  JSESSIONID=916F0236E43FEDA1CD2EF69742E0C958; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 <> 2023-05-13T214048.404.json
 
 ### Получение заказа, когда в запросе написан бред
 GET http://localhost:8080/api/orders/aboba
-Cookie:   JSESSIONID=916F0236E43FEDA1CD2EF69742E0C958; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Получение всех заказов данного ученика (автора запроса)
 GET http://localhost:8080/api/orders/all
-Cookie:  JSESSIONID=916F0236E43FEDA1CD2EF69742E0C958; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:   JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Удаление заказа (может осуществлять только автор заказа)
 DELETE http://localhost:8080/api/orders/10

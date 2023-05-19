@@ -31,6 +31,9 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object catchBadRequest(HttpServletRequest req, Exception exception) {
+        if (req.getHeader("Referer") == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sorry, your request was invalid");
+        }
         req.setAttribute("alert", "Sorry, your request was invalid" + exception.getMessage());
         return "/views/errorPage";
     }
@@ -38,18 +41,29 @@ public class ExceptionController {
     @ExceptionHandler({NoHandlerFoundException.class, NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String catchNotFoundStatus(HttpServletRequest req, Exception exception) {
+        if (req.getHeader("Referer") == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This page does not exist");
+        }
         req.setAttribute("alert", "This page does not exist");
         return "/views/errorPage";
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public String missAccessDenied(AccessDeniedException ex) {
-        throw ex;
+    public String missAccessDenied(HttpServletRequest req, AccessDeniedException ex) {
+        if (req.getHeader("Referer") == null) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this page");
+        } else {
+            throw ex;
+        }
     }
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody //как я поняла необязательна, так как методы RestController по умолчанию возвращают данные в теле ответа HTTP
     public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) {
+        if (req.getHeader("Referer") == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Sorry, unexpected error");
+        }
         req.setAttribute("alert", "500: Internal Server Error");
         return "/views/errorPage";
     }
