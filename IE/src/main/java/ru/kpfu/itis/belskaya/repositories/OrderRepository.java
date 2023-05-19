@@ -30,9 +30,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
     @Query("SELECT o FROM Order o " +
-                    "INNER JOIN Account student ON o.author.account = student " +
-                    "INNER JOIN Tutor t ON t.id = :tutorId " +
-                    "INNER JOIN Account tutorAccount ON t.account = tutorAccount " +
+                    "LEFT JOIN Account student on o.author.account = student " +
+                    "LEFT JOIN Tutor t ON t.id = :tutorId " +
+                    "LEFT JOIN Account tutorAccount ON t.account = tutorAccount " +
                     "AND (tutorAccount.city = student.city AND o.online <> 'ONLINE' OR o.online <> 'OFFLINE') " +
                     "AND o.tutor IS NULL AND NOT t.id IN (select candidates.id from o.candidates candidates) " +
                     "AND o.minRating <= t.rating " +

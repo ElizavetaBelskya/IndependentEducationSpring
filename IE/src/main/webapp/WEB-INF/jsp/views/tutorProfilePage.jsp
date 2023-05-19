@@ -42,8 +42,8 @@
             <p>
               Subjects:
               <ul>
-              <c:forEach var="subject" items="${tutor.subjectList}">
-                <li>${subject.title}</li>
+              <c:forEach var="entry" items="${mapSubjectToAmount}">
+                <li>${entry.key} - ${entry.value} students</li>
               </c:forEach>
           </ul>
             </p>

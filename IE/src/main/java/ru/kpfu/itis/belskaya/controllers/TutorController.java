@@ -36,6 +36,9 @@ public class TutorController {
     private EmailAndPhoneApiValidator emailAndPhoneApiValidator;
 
     @Autowired
+    private StudentService studentService;
+
+    @Autowired
     private OrderService orderService;
 
     @Autowired
@@ -95,6 +98,8 @@ public class TutorController {
         Optional<List<Rate>> reviewsList = tutorService.getRatesOfTutor(tutor);
         map.put("account", account);
         map.put("tutor", tutor);
+        map.put("studentCount", studentService.getStudentsCountByTutor(tutor));
+        map.put("mapSubjectToAmount", tutorService.getMapSubjectToStudentsAmount(tutor));
         if (reviewsList.isPresent()) {
             map.put("reviewsList", reviewsList.get());
         } else {
@@ -156,7 +161,6 @@ public class TutorController {
         accountService.deleteAccount(account);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();
     }
-
 
 
 

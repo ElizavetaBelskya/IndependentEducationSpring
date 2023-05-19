@@ -1,5 +1,6 @@
 package ru.kpfu.itis.belskaya.authentication;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,6 @@ public class EmailRolePasswordToken extends UsernamePasswordAuthenticationToken 
         this.email = email;
         this.role = role;
     }
-
 
 
 }

@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,12 +42,14 @@ public class ExceptionController {
         return "/views/errorPage";
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public String missAccessDenied(AccessDeniedException ex) {
+        throw ex;
+    }
+
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) throws Throwable {
-        if (throwable.getClass().equals(AccessDeniedException.class)) {
-            throw throwable;
-        }
+    public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) {
         req.setAttribute("alert", "500: Internal Server Error");
         return "/views/errorPage";
     }

@@ -260,7 +260,7 @@
 </div>
 
 <c:if test="${approvedTutors.size() == 0 && uncompletedOrders.size() == 0}">
-    <t:infoTextWithButton text="You have not created any orders" action="Create" link="/create_order"/>
+    <t:infoTextWithButton text="You have not created any orders" action="Create" link="/student/new_order"/>
 </c:if>
 
 <c:if test="${uncompletedOrders.size() > 0}">

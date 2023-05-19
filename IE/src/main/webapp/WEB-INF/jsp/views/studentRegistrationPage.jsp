@@ -22,7 +22,7 @@
                                 <form:errors path="name"  class="error-message" />
 
                                 <form:label class="form-label" path="email">Email</form:label>
-                                <form:input id="email-reg-student" class="form-control form-control-lg" name='email' required="true" placeholder="email@example.com" pattern="[A-Za-z0-9-]{2,50}@[a-z]{2,20}.[a-z]{2,4}"
+                                <form:input id="email-reg-student" class="form-control form-control-lg" name='email' required="true" placeholder="email@example.com"
                                           maxlength="76" type="email" path="email"/>
                                 <form:errors path="email" class="error-message" /><br>
 

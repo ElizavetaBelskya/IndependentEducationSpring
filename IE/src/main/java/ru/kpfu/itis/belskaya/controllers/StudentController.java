@@ -112,8 +112,6 @@ public class StudentController {
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
     }
 
-
-
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public String deleteProfile(@AuthenticationPrincipal Account account) {
