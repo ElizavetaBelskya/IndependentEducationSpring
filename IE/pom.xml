@@ -5,10 +5,17 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+        <relativePath />
+    </parent>
+
     <groupId>ru.kpfu.itis.belskaya</groupId>
     <artifactId>IE</artifactId>
     <packaging>jar</packaging>
-    <version>1.1</version>
+    <version>1.2</version>
 
     <name>Independent Education</name>
 
@@ -89,14 +96,12 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
             <version>9.0.33</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jdt.core.compiler</groupId>
             <artifactId>ecj</artifactId>
             <version>4.6.1</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Other Spring stuff -->
@@ -170,7 +175,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.4.RELEASE</version>
+                <version>2.2.5.RELEASE</version>
+                <configuration>
+                    <mainClass>
+                        ru.kpfu.itis.belskaya.Application
+                    </mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
