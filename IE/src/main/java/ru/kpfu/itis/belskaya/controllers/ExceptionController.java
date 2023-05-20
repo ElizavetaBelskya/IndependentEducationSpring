@@ -31,8 +31,13 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object catchBadRequest(HttpServletRequest req, Exception exception) {
-        if (req.getHeader("Referer") == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Sorry, your request was invalid");
+        String userAgent = req.getHeader("User-Agent");
+        if (userAgent == null || !userAgent.contains("Mozilla")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ExceptionDto.builder()
+                            .message(exception.getMessage())
+                            .status(HttpStatus.BAD_REQUEST.value())
+                            .build());
         }
         req.setAttribute("alert", "Sorry, your request was invalid" + exception.getMessage());
         return "/views/errorPage";
@@ -40,18 +45,28 @@ public class ExceptionController {
 
     @ExceptionHandler({NoHandlerFoundException.class, NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String catchNotFoundStatus(HttpServletRequest req, Exception exception) {
-        if (req.getHeader("Referer") == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This page does not exist");
+    public Object catchNotFoundStatus(Exception exception, HttpServletRequest req) {
+        String userAgent = req.getHeader("User-Agent");
+        if (userAgent == null || !userAgent.contains("Mozilla")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ExceptionDto.builder()
+                            .message(exception.getMessage())
+                            .status(HttpStatus.NOT_FOUND.value())
+                            .build());
         }
         req.setAttribute("alert", "This page does not exist");
         return "/views/errorPage";
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public String missAccessDenied(HttpServletRequest req, AccessDeniedException ex) {
-        if (req.getHeader("Referer") == null) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not allowed to access this page");
+    public Object catchAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
+        String userAgent = req.getHeader("User-Agent");
+        if (userAgent == null || !userAgent.contains("Mozilla")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ExceptionDto.builder()
+                            .message(ex.getMessage())
+                            .status(HttpStatus.FORBIDDEN.value())
+                            .build());
         } else {
             throw ex;
         }
@@ -59,8 +74,8 @@ public class ExceptionController {
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody //как я поняла необязательна, так как методы RestController по умолчанию возвращают данные в теле ответа HTTP
-    public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) {
+    @ResponseBody
+    public String catchInternalErrorStatus(Throwable throwable) {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +

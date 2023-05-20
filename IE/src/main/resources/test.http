@@ -9,32 +9,32 @@ GET http://localhost:8080/api/error
 
 ### Получение существующего заказа по id (может осуществлять любой аутентифицированный пользователь)
 GET http://localhost:8080/api/orders/3
-Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:  JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 
 ### Получение не существующего заказа по id
 GET http://localhost:8080/api/orders/999
-Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 <> 2023-05-13T214048.404.json
 
-### Получение заказа, когда в запросе написан бред
+### Получение заказа, когда в запросе написан бред (400 код ошибки)
 GET http://localhost:8080/api/orders/aboba
-Cookie:  JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
-### Получение всех заказов данного ученика (автора запроса)
+### Получение всех заказов данного ученика (только автора запроса)
 GET http://localhost:8080/api/orders/all
 Cookie:   JSESSIONID=CD35D4BD9B70913B2F9CB79C155CBD5F; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Удаление заказа (может осуществлять только автор заказа)
 DELETE http://localhost:8080/api/orders/10
-Cookie: JSESSIONID=3672C15B37BD5F11CCAD314BDDEA0281; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 X-XSRF-TOKEN: e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Получение предметов (может осуществлять любой аутентифицированный пользователь)
 
 GET http://localhost:8080/api/orders/subjects
-Cookie: JSESSIONID=916F0236E43FEDA1CD2EF69742E0C958; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 
 ### Добавление учителя к заказу (может осуществлять только учитель)

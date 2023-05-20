@@ -25,7 +25,7 @@ import java.util.Properties;
 @EnableAspectJAutoProxy
 @ComponentScan("ru.kpfu.itis.belskaya.aspects")
 @EnableJpaRepositories("ru.kpfu.itis.belskaya.repositories")
-@PropertySource({"classpath:app.properties", "classpath:log4j.properties"})
+@PropertySource({"classpath:app.properties"})
 public class RootConfig {
 
     @Resource
