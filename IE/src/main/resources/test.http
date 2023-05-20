@@ -3,6 +3,8 @@ POST http://localhost:8080/main
 Content-Type: application/x-www-form-urlencoded
 
 email=nefrf@mail.ru&password=liza2003&role=TUTOR
+###
+GET http://localhost:8080/api/error
 
 
 ### Получение существующего заказа по id (может осуществлять любой аутентифицированный пользователь)

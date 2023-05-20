@@ -61,15 +61,20 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody //как я поняла необязательна, так как методы RestController по умолчанию возвращают данные в теле ответа HTTP
     public String catchInternalErrorStatus(HttpServletRequest req, Throwable throwable) {
-        if (req.getHeader("Referer") == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Sorry, unexpected error");
-        }
-        req.setAttribute("alert", "500: Internal Server Error");
-        return "/views/errorPage";
+        return "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <title>Server Error</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <h1>Server Error</h1>\n" +
+                "    <p>An error occurred on the server. Please try again later.</p>\n" +
+                "</body>\n" +
+                "</html>\n";
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ExceptionDto> handleNotFound(ResponseStatusException ex) {
+    public ResponseEntity<ExceptionDto> handleResponseException(ResponseStatusException ex) {
         return ResponseEntity.status(ex.getStatus())
                 .body(ExceptionDto.builder()
                         .message(ex.getMessage())
