@@ -63,7 +63,7 @@ public class StudentController {
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map, @AuthenticationPrincipal Account account) {
-        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccountId(account.getId());
         map.put("account", account);
         map.put("student", student);
         return "/views/studentProfilePage";
@@ -72,7 +72,7 @@ public class StudentController {
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.GET)
     public String getTutorsAndCandidates(ModelMap map, @AuthenticationPrincipal Account account) {
-        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccountId(account.getId());
         List<Order> uncompletedOrders = orderService.getUncompletedOrdersByStudent(student);
         List<List<Tutor>> candidatesLists = new ArrayList<>();
         for (Order order : uncompletedOrders) {
@@ -96,7 +96,7 @@ public class StudentController {
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_tutors", method = RequestMethod.POST, params = "action=reject")
     public String rejectTutor(@RequestParam("rejectId") Long rejectId, @AuthenticationPrincipal Account account) {
-        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccountId(account.getId());
         orderService.rejectTutorFromStudentOrders(student, rejectId);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
     }
@@ -106,7 +106,7 @@ public class StudentController {
     public String rateTutor(@RequestParam("idRatedTutor") Long id, @RequestParam("starCount") int starCount,
                             @RequestParam("comment") String comment,
                             @AuthenticationPrincipal Account account) {
-        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccountId(account.getId());
         RateDto rateDto = RateDto.builder().tutorId(id).student(student).rating(starCount).comment(comment).build();
         tutorService.changeRating(rateDto);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("SC#getTutorsAndCandidates").build();
@@ -122,7 +122,7 @@ public class StudentController {
     @PreAuthorize("hasAuthority('STUDENT')")
     @RequestMapping(value = "/my_orders", method = RequestMethod.GET)
     public String getStudentOrders(ModelMap map, @AuthenticationPrincipal Account account) {
-        Student student = userServiceStudent.findByAccount_Id(account.getId());
+        Student student = userServiceStudent.findByAccountId(account.getId());
         Optional<List<Order>> orders = orderService.getOrdersByAuthor(student);
         if (orders.isPresent()) {
             map.put("orders", orders.get());
@@ -153,7 +153,7 @@ public class StudentController {
             return "/views/orderCreationPage";
         } else {
             if (orderForm != null) {
-                Student student = userServiceStudent.findByAccount_Id(account.getId());
+                Student student = userServiceStudent.findByAccountId(account.getId());
                 OrderConverter orderConverter = new OrderConverter(student);
                 Order order = (Order) orderConverter.convert(orderForm, TypeDescriptor.valueOf(OrderForm.class), TypeDescriptor.valueOf(Order.class));
                 orderService.createOrder(order);

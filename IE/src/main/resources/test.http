@@ -9,18 +9,17 @@ GET http://localhost:8080/api/error
 
 ### Получение существующего заказа по id (может осуществлять любой аутентифицированный пользователь)
 GET http://localhost:8080/api/orders/3
-Cookie:  JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie:  JSESSIONID=91657CF8F27B8EE023C798D0DB17EB78; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 
 ### Получение не существующего заказа по id
 GET http://localhost:8080/api/orders/999
-Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=91657CF8F27B8EE023C798D0DB17EB78; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
-<> 2023-05-13T214048.404.json
 
 ### Получение заказа, когда в запросе написан бред (400 код ошибки)
 GET http://localhost:8080/api/orders/aboba
-Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=91657CF8F27B8EE023C798D0DB17EB78; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Получение всех заказов данного ученика (только автора запроса)
 GET http://localhost:8080/api/orders/all
@@ -39,7 +38,7 @@ Cookie: JSESSIONID=94A237AA8FB54FFBE6CC56156A4068C5; XSRF-TOKEN=e67a1878-1990-44
 
 ### Добавление учителя к заказу (может осуществлять только учитель)
 PATCH http://localhost:8080/api/orders/9
-Cookie: JSESSIONID=3672C15B37BD5F11CCAD314BDDEA0281; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=91657CF8F27B8EE023C798D0DB17EB78; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 X-XSRF-TOKEN: e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Обновление заказа (может осуществлять только автор заказа)
@@ -60,7 +59,7 @@ X-XSRF-TOKEN: e67a1878-1990-44a4-afa9-f0c634fdf5cd
 
 ### Добавление нового заказа (может осуществлять только ученик)
 POST http://localhost:8080/api/orders
-Cookie: JSESSIONID=3672C15B37BD5F11CCAD314BDDEA0281; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
+Cookie: JSESSIONID=91657CF8F27B8EE023C798D0DB17EB78; XSRF-TOKEN=e67a1878-1990-44a4-afa9-f0c634fdf5cd
 Content-Type: application/json
 X-XSRF-TOKEN: e67a1878-1990-44a4-afa9-f0c634fdf5cd
 

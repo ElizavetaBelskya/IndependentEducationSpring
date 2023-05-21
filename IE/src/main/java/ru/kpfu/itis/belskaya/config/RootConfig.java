@@ -42,7 +42,6 @@ public class RootConfig {
     }
 
 
-
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

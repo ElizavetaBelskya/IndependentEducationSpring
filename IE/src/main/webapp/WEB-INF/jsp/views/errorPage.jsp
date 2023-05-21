@@ -1,7 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<t:baseHead title="Error"></t:baseHead>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<t:baseHead title="Error"/>
 <body>
 <header>
 <nav class="navbar navbar-expand-lg">

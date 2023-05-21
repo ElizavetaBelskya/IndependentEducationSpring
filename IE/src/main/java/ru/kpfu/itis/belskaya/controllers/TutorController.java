@@ -56,7 +56,7 @@ public class TutorController {
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/my_students", method = RequestMethod.GET)
     public String getMyStudents(ModelMap map,  @AuthenticationPrincipal Account account) {
-        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Tutor tutor = userServiceTutor.findByAccountId(account.getId());
         Optional<List<Order>> tutorOrders = orderService.getOrdersByTutor(tutor);
         if (tutorOrders.isPresent()) {
             List<Student> students = tutorOrders.get().stream().map(Order::getAuthor).collect(Collectors.toList());
@@ -73,7 +73,7 @@ public class TutorController {
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/my_students", method = RequestMethod.POST)
     public String getStudentOfTutorPost(@RequestParam("reject") Long orderId, @AuthenticationPrincipal Account account) {
-        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Tutor tutor = userServiceTutor.findByAccountId(account.getId());
         orderService.cancelTutor(orderId, tutor);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getMyStudents").build() + "?rejected=true";
     }
@@ -81,7 +81,7 @@ public class TutorController {
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String getOrders(ModelMap map,  @AuthenticationPrincipal Account account) {
-        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Tutor tutor = userServiceTutor.findByAccountId(account.getId());
         Optional<List<Order>> orders = orderService.getSuitableOrders(tutor);
         if (orders.isPresent()) {
             map.put("orders", orders.get());
@@ -94,7 +94,7 @@ public class TutorController {
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String getProfile(ModelMap map,  @AuthenticationPrincipal Account account) {
-        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Tutor tutor = userServiceTutor.findByAccountId(account.getId());
         Optional<List<Rate>> reviewsList = tutorService.getRatesOfTutor(tutor);
         map.put("account", account);
         map.put("tutor", tutor);
@@ -111,7 +111,7 @@ public class TutorController {
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public String addDescriptionToProfile(@RequestParam("description") String description, @AuthenticationPrincipal Account account) {
-        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        Tutor tutor = userServiceTutor.findByAccountId(account.getId());
         tutorService.changeDescription(tutor, description);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getProfile").build();
     }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -28,7 +29,7 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionController {
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, HttpClientErrorException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Object catchBadRequest(HttpServletRequest req, Exception exception) {
         String userAgent = req.getHeader("User-Agent");
@@ -98,7 +99,8 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Object handleNotFound(HttpServletRequest req, MethodArgumentNotValidException ex) {
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Object handleMethodNotValid(HttpServletRequest req, MethodArgumentNotValidException ex) {
         String userAgent = req.getHeader("User-Agent");
         if (userAgent != null || userAgent.contains("Mozilla")) {
             req.setAttribute("alert", "Sorry, your request was invalid" + ex.getMessage());

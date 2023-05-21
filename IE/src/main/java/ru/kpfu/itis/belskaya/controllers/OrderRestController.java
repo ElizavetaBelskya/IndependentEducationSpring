@@ -47,7 +47,7 @@ public class OrderRestController implements OrderApi {
 
     @Override
     public ResponseEntity<String> addOrder(Account account, OrderDto orderDto) {
-        Student student = studentService.findByAccount_Id(account.getId());
+        Student student = studentService.findByAccountId(account.getId());
         OrderConverter converter = new OrderConverter(student);
         Order updatedOrder = (Order) converter.convert(orderDto, TypeDescriptor.valueOf(OrderDto.class), TypeDescriptor.valueOf(Order.class));
         updatedOrder.setTutor(null);
@@ -67,7 +67,7 @@ public class OrderRestController implements OrderApi {
     }
 
     public ResponseEntity<String> updateOrder(Account account, Long id, @Valid OrderDto orderDto) {
-        Student student = studentService.findByAccount_Id(account.getId());
+        Student student = studentService.findByAccountId(account.getId());
         OrderConverter converter = new OrderConverter(student);
         Order updatedOrder = (Order) converter.convert(orderDto, TypeDescriptor.valueOf(OrderDto.class), TypeDescriptor.valueOf(Order.class));
         Order orderById = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
@@ -85,7 +85,7 @@ public class OrderRestController implements OrderApi {
     }
 
     public ResponseEntity<String> addTutorToOrder(Long id, Account account) {
-        Tutor tutor = tutorService.findByAccount_Id(account.getId());
+        Tutor tutor = tutorService.findByAccountId(account.getId());
         Order order = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Order not found"
         ));
@@ -95,7 +95,7 @@ public class OrderRestController implements OrderApi {
     }
 
     public ResponseEntity<List<OrderDto>> getAllOrders(Account account) {
-        Student student = studentService.findByAccount_Id(account.getId());
+        Student student = studentService.findByAccountId(account.getId());
         OrderConverter orderConverter = new OrderConverter(student);
         List<Order> orders = orderService.getOrdersByAuthor(student).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Orders not found"
