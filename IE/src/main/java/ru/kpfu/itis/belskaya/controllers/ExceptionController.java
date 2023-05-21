@@ -98,7 +98,12 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorsDto> handleNotFound(MethodArgumentNotValidException ex) {
+    public Object handleNotFound(HttpServletRequest req, MethodArgumentNotValidException ex) {
+        String userAgent = req.getHeader("User-Agent");
+        if (userAgent != null || userAgent.contains("Mozilla")) {
+            req.setAttribute("alert", "Sorry, your request was invalid" + ex.getMessage());
+            return "/views/errorPage";
+        }
         List<ValidationErrorDto> errors = new ArrayList<>();
 
         ex.getBindingResult().getAllErrors().forEach(error -> {

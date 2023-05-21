@@ -47,6 +47,11 @@ public class TutorService {
         tutorRepository.save(tutor);
     }
 
+    public void changeDescription(Tutor tutor, String description) {
+        tutor.setDescription(description);
+        tutorRepository.save(tutor);
+    }
+
     public Optional<List<Rate>> getRatesOfTutor(Tutor tutor) {
         return ratesRepository.findAllByTutor(tutor);
     }

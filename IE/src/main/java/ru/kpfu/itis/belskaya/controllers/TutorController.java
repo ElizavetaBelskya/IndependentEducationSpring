@@ -82,7 +82,7 @@ public class TutorController {
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String getOrders(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
-        Optional<List<Order>> orders = orderService.getSuitableOrders(tutor.getId());
+        Optional<List<Order>> orders = orderService.getSuitableOrders(tutor);
         if (orders.isPresent()) {
             map.put("orders", orders.get());
         } else {
@@ -106,6 +106,14 @@ public class TutorController {
             map.put("reviewsList", null);
         }
         return "/views/tutorProfilePage";
+    }
+
+    @PreAuthorize("hasAuthority('TUTOR')")
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public String addDescriptionToProfile(@RequestParam("description") String description, @AuthenticationPrincipal Account account) {
+        Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
+        tutorService.changeDescription(tutor, description);
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("TC#getProfile").build();
     }
 
 
@@ -156,7 +164,7 @@ public class TutorController {
         return "/views/tutorRegistrationPage";
     }
 
-    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/delete", method = RequestMethod.POST)
     public String deleteProfile( @AuthenticationPrincipal Account account) {
         accountService.deleteAccount(account);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("MC#login").build();

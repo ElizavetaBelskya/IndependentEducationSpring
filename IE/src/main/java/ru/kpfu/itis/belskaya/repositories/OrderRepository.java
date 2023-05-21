@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kpfu.itis.belskaya.models.*;
 import ru.kpfu.itis.belskaya.models.Order;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,9 +28,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long id);
 
     @Query("SELECT o FROM Order o " +
-                    "LEFT JOIN Account student on o.author.account = student " +
-                    "LEFT JOIN Tutor t ON t.id = :tutorId " +
-                    "LEFT JOIN Account tutorAccount ON t.account = tutorAccount " +
+                    "INNER JOIN Account student on o.author.account = student " +
+                    "INNER JOIN Tutor t ON t.id = :tutorId " +
+                    "INNER JOIN Account tutorAccount ON t.account = tutorAccount " +
                     "AND (tutorAccount.city = student.city AND o.online <> 'ONLINE' OR o.online <> 'OFFLINE') " +
                     "AND o.tutor IS NULL AND NOT t.id IN (select candidates.id from o.candidates candidates) " +
                     "AND o.minRating <= t.rating " +
@@ -42,39 +40,20 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     )
     Optional<List<Order>> findSuitableOrderForTutor(@Param("tutorId") Long tutorId);
 
-    @Query("SELECT o FROM Order o " +
-            "WHERE o.author IN (" +
-            "    SELECT s FROM Student s WHERE s.account IN (" +
-            "        SELECT a FROM Account a WHERE a.city = (" +
-            "            SELECT t.account.city FROM Tutor t WHERE t.id = :tutorId" +
-            "        )" +
-            "    )" +
-            ")" +
-            "AND o.online NOT IN (" +
-            "    SELECT o.online FROM Order o WHERE o.author IN (" +
-            "        SELECT s FROM Student s WHERE s.account IN (" +
-            "            SELECT a FROM Account a WHERE a.city = (" +
-            "                SELECT t.account.city FROM Tutor t WHERE t.id = :tutorId" +
-            "            )" +
-            "        )" +
-            "    )" +
-            ")" +
-            "AND o.tutor IS NULL " +
-            "AND NOT EXISTS (" +
-            "    SELECT 1 FROM o.candidates c WHERE c.id = :tutorId" +
-            ")" +
-            "AND o.minRating <= (" +
-            "    SELECT t.rating FROM Tutor t WHERE t.id = :tutorId" +
-            ")" +
-            "AND (o.tutorGender = (" +
-            "    SELECT t.gender FROM Tutor t WHERE t.id = :tutorId" +
-            ") OR o.tutorGender = 'BOTH')" +
-            "AND o.subject IN (" +
-            "    SELECT s.title FROM Tutor t JOIN t.subjectList s WHERE t.id = :tutorId" +
-            ")" +
-            "AND o.state = 'ACTUAL'" +
-            "ORDER BY o.creationDate")
+
+//    с подзапросом
+    @Query(nativeQuery = true, value = "WITH t AS (SELECT * FROM ie_tutor WHERE id = :tutorId LIMIT 1)," +
+            " subject_ids AS (SELECT subject_id FROM tutor_subject WHERE tutor_id = :tutorId) " +
+            "SELECT * FROM ie_order WHERE (tutor_id IS NULL AND min_rating <= (SELECT rating FROM t) " +
+            "AND subject IN (SELECT title FROM subject WHERE id IN (SELECT * FROM subject_ids)) " +
+            "AND ((SELECT gender FROM t) = tutor_gender OR tutor_gender = 'BOTH') " +
+            "AND (((SELECT ia.city_id FROM ie_account ia " +
+            "WHERE ia.id = (SELECT account_id FROM t)) = (SELECT ia.city_id FROM ie_student INNER JOIN" +
+            " ie_account ia ON ia.id = ie_student.account_id AND ie_student.id = ie_order.author_id) " +
+            "AND ie_order.online = 'OFFLINE') OR ((SELECT is_working_online FROM t) AND ie_order.online <> 'OFFLINE')) " +
+            "AND id NOT IN (SELECT order_id FROM order_tutor WHERE tutor_id = :tutorId) AND state = 'ACTUAL') ORDER BY created_at")
     Optional<List<Order>> findSuitableOrderForTutorAlternative(@Param("tutorId") Long tutorId);
+
 
 
     Optional<List<Order>> findOrdersByTutor(Tutor tutor);

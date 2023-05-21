@@ -53,16 +53,28 @@
               <input type='submit' class="gradient-btn" value='Log out'/>
             </form>
 
-            <form method="POST" action="">
+            <form method="POST" action="${spring:mvcUrl('TC#deleteProfile').build()}">
               <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
               <input type='submit' class="gradient-btn" value='Delete account'/>
             </form>
+
           </div>
+
+          <form method="POST" action="#">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <div class="form-floating form-description">
+              <input type="text" name="description" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" value="${tutor.description}"/>
+              <label for="floatingTextarea2">Profile description</label>
+            </div>
+            <input type='submit' class="gradient-btn" value='Update description'/>
+          </form>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+
 
 <c:if test="${reviewsList != null}">
   <c:forEach var="review" items="${reviewsList}">

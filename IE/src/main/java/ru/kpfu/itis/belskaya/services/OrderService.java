@@ -53,8 +53,8 @@ public class OrderService {
     }
 
 
-    public Optional<List<Order>> getSuitableOrders(Long tutorId) {
-        return orderRepository.findSuitableOrderForTutor(tutorId);
+    public Optional<List<Order>> getSuitableOrders(Tutor tutor) {
+        return orderRepository.findSuitableOrderForTutorAlternative(tutor.getId());
     }
 
     public Optional<List<Order>> getOrdersByTutor(Tutor tutor) {
