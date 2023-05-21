@@ -30,4 +30,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("SELECT count(s) from Student s inner join Order o on o.author = s and o.tutor = :tutor")
     int getStudentsCountByTutor(@Param("tutor") Tutor tutor);
 
+
 }

@@ -80,7 +80,7 @@ public class TutorController {
 
     @PreAuthorize("hasAuthority('TUTOR')")
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
-    public String orders(ModelMap map,  @AuthenticationPrincipal Account account) {
+    public String getOrders(ModelMap map,  @AuthenticationPrincipal Account account) {
         Tutor tutor = userServiceTutor.findByAccount_Id(account.getId());
         Optional<List<Order>> orders = orderService.getSuitableOrders(tutor.getId());
         if (orders.isPresent()) {

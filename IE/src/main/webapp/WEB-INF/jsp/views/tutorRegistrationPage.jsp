@@ -18,7 +18,7 @@
                         <div class="row g-0">
                             <div class="col-lg-6">
                                 <div class="p-5">
-                                    <h3 class="fw-normal mb-5" id="title-reg-tutor">General Infomation</h3>
+                                    <h3 class="fw-normal mb-5" id="title-reg-tutor">General Information</h3>
 
                                     <div class="row">
                                         <div class="col-md-6 mb-4 pb-2">

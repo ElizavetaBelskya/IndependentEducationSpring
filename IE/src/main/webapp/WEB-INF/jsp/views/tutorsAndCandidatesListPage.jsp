@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <t:baseHead title="Tutors" scriptLink="/js/tutorsAndCandidatesListScript.js"/>
 
 <body>
@@ -35,9 +36,10 @@
                                             ${approvedTutors.get(i).isWorkingOnline()? "Online" : "Offline"}
                                     </li>
                                 </ul>
-                                <form action="<c:url value="/student/my_tutors?action=reject"/>" method="post">
+                                <form action="#" method="post">
                                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                     <input type="hidden" name="rejectId" value="${approvedTutors.get(i).getId()}">
+                                    <input type="hidden" name="action" value="reject">
                                     <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                 </form>
 
@@ -63,9 +65,10 @@
                                         </li>
                                     </ul>
 
-                                    <form action="<c:url value="/student/my_tutors?action=reject"/>" method="post">
+                                    <form action="#" method="post">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <input type="hidden" name="rejectId" value="${approvedTutors.get(i+1).getId()}">
+                                        <input type="hidden" name="action" value="reject">
                                         <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                     </form>
 
@@ -92,9 +95,10 @@
                                         </li>
                                     </ul>
 
-                                    <form action="<c:url value="/student/my_tutors?action=reject"/>" method="post">
+                                    <form action="#" method="post">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <input type="hidden" name="rejectId" value="${approvedTutors.get(i+2).getId()}">
+                                        <input type="hidden" name="action" value="reject">
                                         <input type="submit" value="Reject" class="btn btn-outline-info"/>
                                     </form>
                                     <button class="btn btn-outline-info rate" value="${approvedTutors.get(i+2).getId()}">Rate</button>
@@ -147,11 +151,12 @@
                                                 ${candidatesLists.get(j).get(i).isWorkingOnline()? "Online" : "Offline"}
                                         </li>
                                     </ul>
-                                    <form action="<c:url value="/student/my_tutors?action=choose"/>" method="post">
+                                    <form action="#" method="post">
                                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                         <input type="hidden" name="chooseOrderId" value="${uncompletedOrders.get(j).getId()}">
                                         <input type="hidden" name="chooseTutorId" value="${candidatesLists.get(j).get(i).getId()}">
                                         <input type="submit" value="Choose" class="btn btn-outline-info"/>
+                                        <input type="hidden" name="action" value="choose">
                                     </form>
                                 </div>
                             </div>
@@ -171,10 +176,11 @@
                                                     ${candidatesLists.get(j).get(i+1).isWorkingOnline()? "Online" : "Offline"}
                                             </li>
                                         </ul>
-                                        <form action="<c:url value="/student/my_tutors?action=choose"/>" method="post">
+                                        <form action="#" method="post">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <input type="hidden" name="chooseOrderId" value="${uncompletedOrders.get(j).getId()}">
                                             <input type="hidden" name="chooseTutorId" value="${candidatesLists.get(j).get(i+1).getId()}">
+                                            <input type="hidden" name="action" value="choose">
                                             <input type="submit" value="Choose" class="btn btn-outline-info"/>
                                         </form>
                                     </div>
@@ -194,10 +200,11 @@
                                                     ${candidatesLists.get(j).get(i+2).isWorkingOnline()? "Online" : "Offline"}
                                             </li>
                                         </ul>
-                                        <form action="<c:url value="/student/my_tutors?action=choose"/>" method="post">
+                                        <form action="#" method="post">
                                             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                                             <input type="hidden" name="chooseOrderId" value="${uncompletedOrders.get(j).getId()}">
                                             <input type="hidden" name="chooseTutorId" value="${candidatesLists.get(j).get(i+2).getId()}">
+                                            <input type="hidden" name="action" value="choose">
                                             <input type="submit" value="Choose" class="btn btn-outline-info"/>
                                         </form>
                                     </div>
@@ -247,11 +254,12 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <form action="<c:url value="/student/my_tutors?action=rated"/>" method="post">
+                <form action="#" method="post">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <input type="hidden" id="id-rated-tutor" name="idRatedTutor" value=""/>
                     <input type="hidden" id = "star-count" name="starCount" value="0"/>
                     <input type="hidden" id = "comment" name="comment" value=""/>
+                    <input type="hidden" name="action" value="rated">
                     <input type="submit" value="Save" class="btn btn-primary"/>
                 </form>
             </div>

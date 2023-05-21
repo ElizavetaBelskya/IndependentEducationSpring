@@ -103,7 +103,7 @@
 </c:if>
 
 <c:if test="${orders == null}">
-    <t:infoTextWithButton text="You don't have any students at the moment" action="Orders" link="/tutor/new_orders"/>
+    <t:infoTextWithButton text="You don't have any students at the moment" action="Orders" link="${spring:mvcUrl('TC#getOrders').build()}"/>
 </c:if>
 
 

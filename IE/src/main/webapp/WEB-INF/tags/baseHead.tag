@@ -30,6 +30,7 @@
 
     <script>
         contextName = "${pageContext.request.contextPath}";
+
     </script>
 
     <link rel="shortcut icon" href="<c:url value="/images/free-icon-studying-1903172.png"/>" type="image/png">

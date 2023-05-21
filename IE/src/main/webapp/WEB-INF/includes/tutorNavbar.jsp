@@ -18,7 +18,7 @@
                     <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#getMyStudents').build()}">My students</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#orders').build()}">New orders</a>
+                    <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#getOrders').build()}">New orders</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" aria-current="page" href="${spring:mvcUrl('TC#getProfile').build()}">My profile</a>

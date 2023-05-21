@@ -37,10 +37,45 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                     "AND o.tutor IS NULL AND NOT t.id IN (select candidates.id from o.candidates candidates) " +
                     "AND o.minRating <= t.rating " +
                     "AND (o.tutorGender = t.gender OR o.tutorGender = 'BOTH') " +
-                    "AND o.subject in (select s.title from t.subjectList s) AND o.state = 'ACTUAL'" +
+                    "AND o.subject in (select s.title from t.subjectList s) AND o.state = 'ACTUAL' " +
             "ORDER BY o.creationDate"
     )
     Optional<List<Order>> findSuitableOrderForTutor(@Param("tutorId") Long tutorId);
+
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.author IN (" +
+            "    SELECT s FROM Student s WHERE s.account IN (" +
+            "        SELECT a FROM Account a WHERE a.city = (" +
+            "            SELECT t.account.city FROM Tutor t WHERE t.id = :tutorId" +
+            "        )" +
+            "    )" +
+            ")" +
+            "AND o.online NOT IN (" +
+            "    SELECT o.online FROM Order o WHERE o.author IN (" +
+            "        SELECT s FROM Student s WHERE s.account IN (" +
+            "            SELECT a FROM Account a WHERE a.city = (" +
+            "                SELECT t.account.city FROM Tutor t WHERE t.id = :tutorId" +
+            "            )" +
+            "        )" +
+            "    )" +
+            ")" +
+            "AND o.tutor IS NULL " +
+            "AND NOT EXISTS (" +
+            "    SELECT 1 FROM o.candidates c WHERE c.id = :tutorId" +
+            ")" +
+            "AND o.minRating <= (" +
+            "    SELECT t.rating FROM Tutor t WHERE t.id = :tutorId" +
+            ")" +
+            "AND (o.tutorGender = (" +
+            "    SELECT t.gender FROM Tutor t WHERE t.id = :tutorId" +
+            ") OR o.tutorGender = 'BOTH')" +
+            "AND o.subject IN (" +
+            "    SELECT s.title FROM Tutor t JOIN t.subjectList s WHERE t.id = :tutorId" +
+            ")" +
+            "AND o.state = 'ACTUAL'" +
+            "ORDER BY o.creationDate")
+    Optional<List<Order>> findSuitableOrderForTutorAlternative(@Param("tutorId") Long tutorId);
+
 
     Optional<List<Order>> findOrdersByTutor(Tutor tutor);
 
