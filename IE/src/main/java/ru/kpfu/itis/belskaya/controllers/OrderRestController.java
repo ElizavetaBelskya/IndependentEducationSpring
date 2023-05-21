@@ -89,8 +89,10 @@ public class OrderRestController implements OrderApi {
         Order order = orderService.findOrderById(id).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.NOT_FOUND, "Order not found"
         ));
-        order.getCandidates().add(tutor);
-        orderService.updateOrder(order);
+        if (!order.getCandidates().contains(tutor)) {
+            order.getCandidates().add(tutor);
+            orderService.updateOrder(order);
+        }
         return ResponseEntity.ok("Updated");
     }
 

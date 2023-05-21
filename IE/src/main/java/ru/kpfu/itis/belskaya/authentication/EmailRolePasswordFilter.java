@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EmailRolePasswordFilter extends UsernamePasswordAuthenticationFilter {
 
-    public EmailRolePasswordFilter(AuthenticationManager authenticationManager, String failureUrl, String successUrl) {
+    public EmailRolePasswordFilter(AuthenticationManager authenticationManager, String authPage, String failureUrl, String successUrl) {
         super();
         setAuthenticationManager(authenticationManager);
-        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/main", "POST"));
+        setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(authPage, "POST"));
         super.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(failureUrl));
         SavedRequestAwareAuthenticationSuccessHandler successHandler = new SavedRequestAwareAuthenticationSuccessHandler();
         successHandler.setDefaultTargetUrl(successUrl);

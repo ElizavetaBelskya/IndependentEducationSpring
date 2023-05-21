@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     public EmailRolePasswordFilter filter() throws Exception {
-        return new EmailRolePasswordFilter(authenticationManagerBean(), "/main?status=failed", "/main?status=success");
+        return new EmailRolePasswordFilter(authenticationManagerBean(), "/main","/main?status=failed", "/main?status=success");
     }
 
     @Override
