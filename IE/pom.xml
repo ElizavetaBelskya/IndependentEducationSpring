@@ -14,7 +14,7 @@
 
     <groupId>ru.kpfu.itis.belskaya</groupId>
     <artifactId>IE</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>1</version>
 
     <name>Independent Education</name>
