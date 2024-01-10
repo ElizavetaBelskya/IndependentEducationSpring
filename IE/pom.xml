@@ -20,13 +20,11 @@
     <name>Independent Education</name>
 
     <properties>
-        <!-- Generic properties -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- Spring -->
         <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
         <spring-security.version>5.3.0.RELEASE</spring-security.version>
 
@@ -92,7 +90,6 @@
         </dependency>
 
 
-        <!-- Stuff for JSP. See https://mkyong.com/spring-boot/spring-boot-hello-world-example-jsp/ -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -109,8 +106,6 @@
             <version>4.6.1</version>
         </dependency>
 
-        <!-- Other Spring stuff -->
-        <!-- JSP Spring Security Taglib -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
@@ -118,15 +113,12 @@
         </dependency>
 
 
-        <!-- Tools for Spring Boot deploy etc -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -154,7 +146,6 @@
             <version>1.6.4</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-hibernate5 -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-hibernate5</artifactId>
